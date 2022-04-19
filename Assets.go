@@ -50,7 +50,7 @@ var(
   MainPath = NewPath(Exist)
     Assets = MainPath.Dir("Assets")
       Textures = Assets.Dir("Textures")
-        FonImage = TextureOpen(Textures, "geno-online-v1c.jpg", Nil_Texture)
+        //FonImage = TextureOpen(Textures, "geno-online-v1c.jpg", Nil_Texture)
         Players = Textures.Dir("Players")
           First = Players.Dir("First")
             Main = First.Dir("Main")
@@ -59,7 +59,7 @@ var(
           First_b = Ground.Dir("First")
             Block_plit_face = TextureOpen(First_b, "plit_face.png", Nil_Texture)
       Fonts = Assets.Dir("Fonts")
-        FonFont = FontOpen(Fonts, "Ranika.otf", Nil_Font)
+        //FonFont = FontOpen(Fonts, "Ranika.otf", Nil_Font)
 )
 
 func TextureOpen(p Path, f string, empty_texture *ebiten.Image)*ebiten.Image{

@@ -1,8 +1,11 @@
 package main
 
 import (
+  "fmt"
+  "image/color"
 	"github.com/hajimehoshi/ebiten/v2"
   matrix "github.com/illua1/go-helpful/VectorMatrix"
+  //ternary "github.com/illua1/go-helpful/If"
 )
 
 type Stand struct {
@@ -23,7 +26,7 @@ func NewPlayer(x,y,z float64)Player{
           x,
           y,
           z,
-          100,
+          3,
         ),
       ),
       NewImageDrawer[float64](
@@ -61,7 +64,7 @@ func BoxesColiseTest(a, b *Boxe)bool{
   p2 := b.Dynamik.Location.A
   v2 := b.Dynamik.Velocity.A
   
-  x_dist := (FacePoints1[0].Z + p1[2]) - (FacePoints2[0].Z + p2[2])
+  x_dist := (FacePoints1[0].Z + p1[2]) - (FacePoints2[1].Z + p2[2])
   
   x_velocity := v1[2] - v2[2]
   
@@ -69,19 +72,24 @@ func BoxesColiseTest(a, b *Boxe)bool{
   
   //log.Print(x_dist, x_velocity, t)
   
+    fmt.Println(t)
   if (t < 1)&&(t > 0) {
-    
+      a.DrawColor = color.RGBA{0,0,255,255}
     var sizes1 = a.Core.FaceArea()
     var sizes2 = b.Core.FaceArea()
     
     if (sizes1[0][0]+sizes2[0][0]) > matrix.Abc(p1[0] - p2[0])&&(sizes1[0][1]+sizes2[0][1]) > matrix.Abc(p1[1] - p2[1]) {
-      a.Dynamik.Velocity.A[2] = -a.Dynamik.Velocity.A[2]*0.9
-      b.Dynamik.Velocity.A[2] = -b.Dynamik.Velocity.A[2]*0.9
-      a.Dynamik.Accelerate.A[2] = -a.Dynamik.Accelerate.A[2]*0.9
-      b.Dynamik.Accelerate.A[2] = -b.Dynamik.Accelerate.A[2]*0.9
       
+      a.Dynamik.Connect_to_Bottom = true
+      a.Dynamik.Velocity.A[2] = 0
+      //a.Dynamik.Velocity.A[2] = 100
+      //a.Dynamik.Accelerate.A[2] = -a.Dynamik.Accelerate.A[2]
+      //b.Dynamik.Velocity.A[2] = -b.Dynamik.Velocity.A[2]
+      //a.Dynamik.Accelerate.A[2] = ternary.Ternary(a.Dynamik.Accelerate.A[2] > 0, a.Dynamik.Accelerate.A[2], 0)
+      //b.Dynamik.Accelerate.A[2] = ternary.Ternary(b.Dynamik.Accelerate.A[2] < 0, b.Dynamik.Accelerate.A[2], 0)
       return true
     }
   }
+  a.DrawColor = color.RGBA{255,255,255,255}
   return false
 }

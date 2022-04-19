@@ -11,6 +11,7 @@ import (
 type Boxe struct{
   Core volume.Boxe[float64]
   Dynamik Physics
+  DrawColor color.Color
 }
 
 func NewBoxe(x, y, z float64, physics Physics)Boxe{
@@ -18,6 +19,7 @@ func NewBoxe(x, y, z float64, physics Physics)Boxe{
   return Boxe{
     Core : volume.NewBoxe[float64](-x, -y, -z, x, y, z),
     Dynamik : physics,
+    DrawColor : color.RGBA{255,255,255,255},
   }
 }
 
@@ -41,6 +43,6 @@ func(boxe *Boxe)Draw(screen *ebiten.Image, screen_geom ebiten.GeoM, worldMatrix 
     })
     x1, y1 := screen_geom.Apply(p1.A[0], p1.A[1])
     x2, y2 := screen_geom.Apply(p2.A[0], p2.A[1])
-    ebitenutil.DrawLine(screen, x1, y1, x2, y2, color.RGBA{255,255,255,255})
+    ebitenutil.DrawLine(screen, x1, y1, x2, y2, boxe.DrawColor)
   }
 }
