@@ -2,7 +2,7 @@ package main
 
 import (
 	"log"
-  //"math"
+  "math"
 	"github.com/hajimehoshi/ebiten/v2"
   sort "github.com/illua1/go-helpful/Sort"
   matrix "github.com/illua1/go-helpful/VectorMatrix"
@@ -13,6 +13,7 @@ type Programm struct {}
 var(
   r [3]float64
   
+  JumpFlag bool = false
   
   camera = NewCamera(0,0,0)
   player = NewPlayer(0, 0, 100)
@@ -31,14 +32,20 @@ func (g *Programm) Update() error {
     player.This.Dynamik.VelocityAdd(0, 5, 0)
   }
   if ebiten.IsKeyPressed(ebiten.KeyD) {
-    player.This.Dynamik.VelocityAdd(-5, 0, 0)
-  }
-  if ebiten.IsKeyPressed(ebiten.KeyA) {
     player.This.Dynamik.VelocityAdd(5, 0, 0)
   }
-  if ebiten.IsKeyPressed(ebiten.KeySpace) {
-    player.This.Dynamik.AccelerateAdd(0, 0, 2)
+  if ebiten.IsKeyPressed(ebiten.KeyA) {
+    player.This.Dynamik.VelocityAdd(-5, 0, 0)
   }
+  if ebiten.IsKeyPressed(ebiten.KeySpace) {
+    if !JumpFlag {
+      player.This.Dynamik.AccelerateAdd(0, 0, 100)
+      JumpFlag = true
+    }
+  } else {
+    JumpFlag = false
+  }
+  
   player.This.Dynamik.AccelerateAdd(0,0, player.This.Dynamik.Gravity)
   
   BoxesColiseTest(&player.This, &cube.This)
@@ -47,13 +54,13 @@ func (g *Programm) Update() error {
   
   {
     //r[0] = math.Pi/4
-    //r[0] = math.Pi/2
-    //r[2] = math.Pi/4
+    r[0] = math.Pi/4
+    r[2] = math.Pi/4
     /*
-    */
     x, y := ebiten.CursorPosition()
     r[2] = float64(x)/100
     r[0] = float64(y)/100
+    */
     camera.SetMatrix(matrix.Rotate3x3_YXZ[float64](r))
   }
   

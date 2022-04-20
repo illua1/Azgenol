@@ -1,7 +1,6 @@
 package main
 
 import (
-  "fmt"
   "image/color"
 	"github.com/hajimehoshi/ebiten/v2"
   matrix "github.com/illua1/go-helpful/VectorMatrix"
@@ -26,7 +25,7 @@ func NewPlayer(x,y,z float64)Player{
           x,
           y,
           z,
-          3,
+          10,
         ),
       ),
       NewImageDrawer[float64](
@@ -56,40 +55,63 @@ func(player *Player)Draw(screen *ebiten.Image, screen_geom ebiten.GeoM, camera *
 
 func BoxesColiseTest(a, b *Boxe)bool{
   
-  var FacePoints1 = a.Core.FaceCentres()
-  var FacePoints2 = b.Core.FaceCentres()
-  
-  p1 := a.Dynamik.Location.A
-  v1 := a.Dynamik.Velocity.A
-  p2 := b.Dynamik.Location.A
-  v2 := b.Dynamik.Velocity.A
-  
-  x_dist := (FacePoints1[0].Z + p1[2]) - (FacePoints2[1].Z + p2[2])
-  
-  x_velocity := v1[2] - v2[2]
-  
-  t := (x_dist / x_velocity)
-  
-  //log.Print(x_dist, x_velocity, t)
-  
-    fmt.Println(t)
-  if (t < 1)&&(t > 0) {
-      a.DrawColor = color.RGBA{0,0,255,255}
-    var sizes1 = a.Core.FaceArea()
-    var sizes2 = b.Core.FaceArea()
+  if !a.Dynamik.Connect_to_Bottom{
     
-    if (sizes1[0][0]+sizes2[0][0]) > matrix.Abc(p1[0] - p2[0])&&(sizes1[0][1]+sizes2[0][1]) > matrix.Abc(p1[1] - p2[1]) {
+    var FacePoints1 = a.Core.FaceCentres()
+    var FacePoints2 = b.Core.FaceCentres()
+    
+    p1 := a.Dynamik.Location.A
+    v1 := a.Dynamik.Velocity.A
+    p2 := b.Dynamik.Location.A
+    v2 := b.Dynamik.Velocity.A
+    
+    x_dist := (FacePoints1[0].Z + p1[2]) - (FacePoints2[1].Z + p2[2])
+    
+    x_velocity := v1[2] - v2[2]
+    
+    t := (x_dist / x_velocity)
+    
+    if (t < 1)&&(t > 0) {
+        a.DrawColor = color.RGBA{0,0,255,255}
+      var sizes1 = a.Core.FaceArea()
+      var sizes2 = b.Core.FaceArea()
       
-      a.Dynamik.Connect_to_Bottom = true
-      a.Dynamik.Velocity.A[2] = 0
-      //a.Dynamik.Velocity.A[2] = 100
-      //a.Dynamik.Accelerate.A[2] = -a.Dynamik.Accelerate.A[2]
-      //b.Dynamik.Velocity.A[2] = -b.Dynamik.Velocity.A[2]
-      //a.Dynamik.Accelerate.A[2] = ternary.Ternary(a.Dynamik.Accelerate.A[2] > 0, a.Dynamik.Accelerate.A[2], 0)
-      //b.Dynamik.Accelerate.A[2] = ternary.Ternary(b.Dynamik.Accelerate.A[2] < 0, b.Dynamik.Accelerate.A[2], 0)
-      return true
+      if (sizes1[0][0]+sizes2[0][0]) > matrix.Abc(p1[0] - p2[0])&&(sizes1[0][1]+sizes2[0][1]) > matrix.Abc(p1[1] - p2[1]) {
+        a.Dynamik.Connect_to_Bottom = true
+        a.Dynamik.Velocity.A[2] = 0
+        a.Dynamik.Accelerate.A[2] = 0
+        return true
+      }
+    }
+  }else{
+    
+    var FacePoints1 = a.Core.FaceCentres()
+    var FacePoints2 = b.Core.FaceCentres()
+    
+    p1 := a.Dynamik.Location.A
+    v1 := a.Dynamik.Velocity.A
+    p2 := b.Dynamik.Location.A
+    v2 := b.Dynamik.Velocity.A
+    
+    v1[2] = -100
+    
+    x_dist := (FacePoints1[0].Z + p1[2]) - (FacePoints2[1].Z + p2[2])
+    
+    x_velocity := v1[2] - v2[2]
+    
+    t := (x_dist / x_velocity)
+    
+    if (t < 1)&&(t > 0) {
+        a.DrawColor = color.RGBA{0,0,255,255}
+      var sizes1 = a.Core.FaceArea()
+      var sizes2 = b.Core.FaceArea()
+      
+      if (sizes1[0][0]+sizes2[0][0]) > matrix.Abc(p1[0] - p2[0])&&(sizes1[0][1]+sizes2[0][1]) > matrix.Abc(p1[1] - p2[1]) {
+        return true
+      }
     }
   }
+  a.Dynamik.Connect_to_Bottom = false
   a.DrawColor = color.RGBA{255,255,255,255}
   return false
 }

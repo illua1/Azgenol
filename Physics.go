@@ -30,23 +30,18 @@ func NewPhysics(px, py, pz, g float64)Physics{
 }
 
 func (physics *Physics)Update(){
-  //physics.AccelerateAdd(0,0, physics.Gravity)
   physics.VelocityUpdate()
   physics.LocationUpdate()
 }
 
 func (physics *Physics)LocationUpdate(){
-  for i := range physics.Location.A {
-    physics.Location.A[i] += physics.Velocity.A[i]*(1-DeltaTime)
-  }
   physics.Velocity.Scale(DeltaTime)
+  physics.Location.Add(physics.Velocity)
 }
 
 func (physics *Physics)VelocityUpdate(){
-  for i := range physics.Velocity.A {
-    physics.Velocity.A[i] += physics.Accelerate.A[i]*(1-DeltaTime)
-  }
   physics.Accelerate.Scale(DeltaTime)
+  physics.Velocity.Add(physics.Accelerate)
 }
 
 func (physics *Physics)VelocityAdd(x, y, z float64){
@@ -57,17 +52,25 @@ func (physics *Physics)VelocityAdd(x, y, z float64){
     if !physics.Connect_to_Top {
       physics.Velocity.A[2] += z
     }
+    
   } else{
     if !physics.Connect_to_Bottom {
       physics.Velocity.A[2] += z
     }
   }
-  
-  
 }
 
 func (physics *Physics)AccelerateAdd(x, y, z float64){
   physics.Accelerate.A[0] += x
   physics.Accelerate.A[1] += y
-  physics.Accelerate.A[2] += z
+  if z > 0 {
+    if !physics.Connect_to_Top {
+      physics.Accelerate.A[2] += z
+    }
+    
+  } else{
+    if !physics.Connect_to_Bottom {
+      physics.Accelerate.A[2] += z
+    }
+  }
 }
