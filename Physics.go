@@ -1,76 +1,84 @@
 package main
 
 import (
+  
+  "image/color"
+	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
+  volume "github.com/illua1/go-helpful/Volume"
   matrix "github.com/illua1/go-helpful/VectorMatrix"
 )
 
 var(
-  DeltaTime float64 = 1 / 1.5
+  DeltaTime float64 = 1/6
 )
 
 type Physics struct {
-  Location, Velocity, Accelerate matrix.Vector[float64, [3]float64]
-  Resistance float64
-  Gravity float64
+  Location, Velocity matrix.Vector[float64, [3]float64]
+  Resistance, Gravity, Mass float64
   
-  Connect_to_Top bool
-  Connect_to_Bottom bool
-  Connect_to_Left bool
-  Connect_to_Right bool
-  Connect_to_Fase bool
-  Connect_to_Behind bool
+  Connect_to volume.BoxContainerFaces[bool]
 }
 
 func NewPhysics(px, py, pz, g float64)Physics{
   return Physics{
     Location : matrix.Vector[float64, [3]float64]{[3]float64{px, py, pz}},
-    Resistance : 1,
+    Resistance : 0.75,
     Gravity : -g,
   }
 }
 
-func (physics *Physics)Update(){
-  physics.VelocityUpdate()
-  physics.LocationUpdate()
-}
-
-func (physics *Physics)LocationUpdate(){
-  physics.Velocity.Scale(DeltaTime)
-  physics.Location.Add(physics.Velocity)
-}
-
-func (physics *Physics)VelocityUpdate(){
-  physics.Accelerate.Scale(DeltaTime)
-  physics.Velocity.Add(physics.Accelerate)
+func (physics *Physics)Update(t float64){
+  Step := physics.Velocity
+  Step.Scale(t)
+  physics.Location.Add(Step)
+  
+  physics.Velocity.Scale(1 - t*physics.Resistance)
+  physics.Velocity.Add(matrix.Vector3(0,0,physics.Gravity))
 }
 
 func (physics *Physics)VelocityAdd(x, y, z float64){
   physics.Velocity.A[0] += x
   physics.Velocity.A[1] += y
-  
-  if z > 0 {
-    if !physics.Connect_to_Top {
-      physics.Velocity.A[2] += z
-    }
-    
-  } else{
-    if !physics.Connect_to_Bottom {
-      physics.Velocity.A[2] += z
-    }
-  }
+  physics.Velocity.A[2] += z
 }
-
-func (physics *Physics)AccelerateAdd(x, y, z float64){
-  physics.Accelerate.A[0] += x
-  physics.Accelerate.A[1] += y
-  if z > 0 {
-    if !physics.Connect_to_Top {
-      physics.Accelerate.A[2] += z
-    }
-    
-  } else{
-    if !physics.Connect_to_Bottom {
-      physics.Accelerate.A[2] += z
+func(physics *Physics)Draw(screen *ebiten.Image, screen_geom ebiten.GeoM, worldMatrix *matrix.Matrix[float64, [3]float64, [3][3]float64]){
+  
+  x, y := screen_geom.Apply(0,0)
+  
+  lines_draw := physics.Connect_to
+  
+  vectors := [6]matrix.Vector[float64, [3]float64]{
+    matrix.Vector3[float64](0,0,50),
+    matrix.Vector3[float64](0,0,-50),
+    matrix.Vector3[float64](0,-50,0),
+    matrix.Vector3[float64](0,50,0),
+    matrix.Vector3[float64](-50,0,0),
+    matrix.Vector3[float64](50,0,0),
+  }
+  
+  for i := range lines_draw {
+    if lines_draw[i] {
+      var p1 = worldMatrix.MulVector(matrix.Vector[float64, [3]float64]{
+        A:[3]float64{
+          float64(0),
+          float64(0),
+          float64(0),
+        },
+      })
+      var p2 = worldMatrix.MulVector(vectors[i])
+      x1, y1 := screen_geom.Apply(p1.A[0], p1.A[1])
+      x2, y2 := screen_geom.Apply(p2.A[0], p2.A[1])
+      ebitenutil.DrawLine(screen, x1, y1, x2, y2, color.RGBA{0,0,255,255})
     }
   }
+  const size float64 = 5
+  ebitenutil.DrawRect(
+    screen,
+    x-size/2,
+    y-size/2,
+    size,
+    size,
+    color.RGBA{255,255,255,255},
+  )
 }

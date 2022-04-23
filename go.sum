@@ -63,6 +63,12 @@ github.com/illua1/go-helpful v0.0.0-20220418145757-21208d61740b h1:CitqhsjJZZn8p
 github.com/illua1/go-helpful v0.0.0-20220418145757-21208d61740b/go.mod h1:C1Of6MolyVgUf+dvihNnnbDfnAoYY6WZ49zfL8yE9/A=
 github.com/illua1/go-helpful v0.0.0-20220418191740-f95222c3be62 h1:rT8DzyxKNPScwA14n8Xk5upQJTpXHFewaGNLMUt+i6A=
 github.com/illua1/go-helpful v0.0.0-20220418191740-f95222c3be62/go.mod h1:C1Of6MolyVgUf+dvihNnnbDfnAoYY6WZ49zfL8yE9/A=
+github.com/illua1/go-helpful v0.0.0-20220420091220-337726c397fe h1:AYL9BD5S4l4kIsJ5jh0I6NJ+OhMfS+eSCSMdW3FaIFM=
+github.com/illua1/go-helpful v0.0.0-20220420091220-337726c397fe/go.mod h1:C1Of6MolyVgUf+dvihNnnbDfnAoYY6WZ49zfL8yE9/A=
+github.com/illua1/go-helpful v0.0.0-20220423085839-950ef31d6dce h1:Ty9r2FRxkqCCPQTHE52XQykmAFkwbWkmSASAEWHbUjM=
+github.com/illua1/go-helpful v0.0.0-20220423085839-950ef31d6dce/go.mod h1:C1Of6MolyVgUf+dvihNnnbDfnAoYY6WZ49zfL8yE9/A=
+github.com/illua1/go-helpful v0.0.0-20220423131448-693836f6a6e9 h1:xwyujruH4UPu9TZdfO7CgC92yS32bzebIw8xt9cI0ok=
+github.com/illua1/go-helpful v0.0.0-20220423131448-693836f6a6e9/go.mod h1:C1Of6MolyVgUf+dvihNnnbDfnAoYY6WZ49zfL8yE9/A=
 github.com/jakecoffman/cp v1.1.0/go.mod h1:JjY/Fp6d8E1CHnu74gWNnU0+b9VzEdUVPoJxg2PsTQg=
 github.com/jezek/xgb v0.0.0-20210312150743-0e0f116e1240/go.mod h1:3P4UH/k22rXyHIJD2w4h2XMqPX4Of/eySEZq9L6wqc4=
 github.com/jezek/xgb v1.0.0 h1:s2rRzAV8KQRlpsYA7Uyxoidv1nodMF0m6dIG6FhhVLQ=

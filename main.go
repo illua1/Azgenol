@@ -16,8 +16,20 @@ var(
   JumpFlag bool = false
   
   camera = NewCamera(0,0,0)
+  
   player = NewPlayer(0, 0, 100)
+  
   cube = NewCube(200, 200, 10, 0, 0, 0, Block_plit_face)
+  cube1 = NewCube(200, 200, 10, 50, 0, -150, Block_plit_face)
+  cube2 = NewCube(200, 200, 10, 100, 0, -300, Block_plit_face)
+  
+  phys = NewPhysicsCollectro(
+    &player.This,
+    &cube.This,
+    &cube1.This,
+    &cube2.This,
+  )
+  
 )
 
 func (g *Programm) Update() error {
@@ -39,27 +51,23 @@ func (g *Programm) Update() error {
   }
   if ebiten.IsKeyPressed(ebiten.KeySpace) {
     if !JumpFlag {
-      player.This.Dynamik.AccelerateAdd(0, 0, 100)
+      player.This.Dynamik.VelocityAdd(0, 0, 100)
       JumpFlag = true
     }
   } else {
     JumpFlag = false
   }
   
-  player.This.Dynamik.AccelerateAdd(0,0, player.This.Dynamik.Gravity)
-  
-  BoxesColiseTest(&player.This, &cube.This)
-  
-  player.This.Dynamik.Update()
+  phys.Update()
   
   {
     //r[0] = math.Pi/4
     r[0] = math.Pi/4
     r[2] = math.Pi/4
-    /*
     x, y := ebiten.CursorPosition()
     r[2] = float64(x)/100
     r[0] = float64(y)/100
+    /*
     */
     camera.SetMatrix(matrix.Rotate3x3_YXZ[float64](r))
   }
@@ -81,7 +89,10 @@ func (g *Programm) Draw(screen *ebiten.Image) {
   camera.Matrix.Slise(0,0,2,2).FillTo(GeomMatrix.SetElement)
   GeomMatrix.Translate(GeomMatrix.Apply(-camera.Location.A[0], -camera.Location.A[1]))
   
+  cube2.Draw(screen, ScreenGeom, &camera)
+  cube1.Draw(screen, ScreenGeom, &camera)
   cube.Draw(screen, ScreenGeom, &camera)
+  
   player.Draw(screen, ScreenGeom, &camera)
 }
 

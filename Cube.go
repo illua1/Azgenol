@@ -3,11 +3,12 @@ package main
 import (
   "math"
 	"github.com/hajimehoshi/ebiten/v2"
+  volume "github.com/illua1/go-helpful/Volume"
   matrix "github.com/illua1/go-helpful/VectorMatrix"
 )
 
 var (
-  Cube_Matrixes_Constant = [6]matrix.Matrix[float64, [3]float64, [3][3]float64]{
+  Cube_Matrixes_Constant = volume.BoxContainerFaces[matrix.Matrix[float64, [3]float64, [3][3]float64]]{
     matrix.Matrix3x3[float64](),
     matrix.Matrix3x3[float64](),
     matrix.Rotate3x3_x[float64](math.Pi/2),
@@ -18,13 +19,13 @@ var (
 )
 
 type Cube struct {
-  This Boxe
+  This Box
   Faces [6]Serface
 }
 
 func NewCube(sx, sy, sz, px, py, pz float64, img *ebiten.Image)Cube{
   
-  var this = NewBoxe(
+  var this = NewBox(
     sx,
     sy,
     sz,
