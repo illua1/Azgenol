@@ -2,7 +2,7 @@ package main
 
 import (
   "log"
-  "image/color"
+  //"image/color"
   volume "github.com/illua1/go-helpful/Volume"
   matrix "github.com/illua1/go-helpful/VectorMatrix"
 )
@@ -21,10 +21,14 @@ func(pc *PhysicsCollectro)Append(in ...*Box){
   pc.Collection = append(pc.Collection, in...)
 }
 
+var(
+  ignore_A int = -1
+  ignore_B int = -1
+)
+
 func(pc *PhysicsCollectro)Update(){
-  var t float64 = 0
   var min_t float64 = 1
-  var idA, idB int = 0, 1
+  var idA, idB int = -1, -1
   var colise bool = false
   var AfaceId int = 0
   /*
@@ -35,10 +39,10 @@ func(pc *PhysicsCollectro)Update(){
     And at new date, just repest this things, 
     Before we not get 1.0 time at satart of allgoritm
   */
-  for count := 0; count < 1000; count++ {
-    for i := 0; i < len(pc.Collection); i++{
-      for e := i+1; e < len(pc.Collection); e++ {
-        if moment, polyFace := BoxsColiseTest(pc.Collection[i], pc.Collection[e]); ((moment > 0)&&((moment+t)<=1)&&(moment < min_t)) {
+  for i := 0; i < len(pc.Collection); i++{
+    for e := i+1; e < len(pc.Collection); e++ {
+      if moment, polyFace, ok := BoxsColiseTest(pc.Collection[i], pc.Collection[e], min_t); ok {
+        if !(((ignore_A == i)||(ignore_B == i)) && ((ignore_A == e)||(ignore_B == e))) {
           min_t = moment
           idA, idB = i, e
           colise = true
@@ -46,23 +50,22 @@ func(pc *PhysicsCollectro)Update(){
         }
       }
     }
-    for i := 0; i < len(pc.Collection); i++{
-      pc.Collection[i].Dynamik.Update(min_t)
-    }
-    if colise {
-      log.Print("Colise ", t)
-      
-      pc.Collection[idA].ColiseSolve(pc.Collection[idB], AfaceId)
-      pc.Collection[idB].ColiseSolve(pc.Collection[idA], volume.FaceOpposite(AfaceId))
-    }
-    t += min_t
-    if t >= 1 {
-      return
+  }
+  for i := 0; i < len(pc.Collection); i++{
+    pc.Collection[i].Dynamik.Update(min_t*0.9)
+  }
+  if colise {
+    pc.Collection[idA].ColiseSolve(pc.Collection[idB], AfaceId)
+    if !pc.Collection[idA].Dynamik.Immovable && !pc.Collection[idB].Dynamik.Immovable {
+      log.Print("Do colise solve :", min_t)
     }
   }
+  ignore_A = idA
+  ignore_B = idB
+  
 }
 
-func BoxsColiseTest(a, b *Box)(float64, int){
+func BoxsColiseTest(a, b *Box, min_t float64)(t float64, f_index int, ok bool){
   
   var FacePoints1 = a.Core.FaceCentres()
   var FacePoints2 = b.Core.FaceCentres()
@@ -72,24 +75,26 @@ func BoxsColiseTest(a, b *Box)(float64, int){
   p2 := b.Dynamik.Location.A
   v2 := b.Dynamik.Velocity.A
   
-  if a.Dynamik.Connect_to[volume.BottomFace] {
-    v2[2] = -100
+  t = min_t
+  f_index = -1
+  
+  if tx := Future(p1[2], p2[2], p1[2]+v1[2], p2[2]+v2[2], FacePoints1[volume.BottomFace].Z, FacePoints2[volume.TopFace].Z); (tx > 0)&&(tx <= t) {
+    t = tx
+    f_index = volume.TopFace
+    ok = true
   }
-  
-  x_dist := -(FacePoints1[volume.TopFace].Z + p1[2]) + (FacePoints2[volume.BottomFace].Z + p2[2])
-  
-  x_velocity := v1[2] - v2[2]
-  
-  t := (x_dist / x_velocity)
-  
-  a.DrawColor = color.RGBA{255,255,255,255}
-  if (t < 1)&&(t > 0) {
-    var sizes1 = a.Core.FaceArea()
-    var sizes2 = b.Core.FaceArea()
-    if (sizes1[0][0]+sizes2[0][0]) > matrix.Abc(p1[0] - p2[0])&&(sizes1[0][1]+sizes2[0][1]) > matrix.Abc(p1[1] - p2[1]) {
-      a.DrawColor = color.RGBA{0,0,255,255}
-      return t, volume.BottomFace
-    }
+  if tx := Future(p1[2], p2[2], p1[2]+v1[2], p2[2]+v2[2], FacePoints1[volume.TopFace].Z, FacePoints2[volume.BottomFace].Z); (tx > 0)&&(tx <= t) {
+    t = tx
+    f_index = volume.TopFace
+    ok = true
   }
-  return 100, -1
+  return
+}
+
+func Future(A_x, B_x, A_x_t, B_x_t, A_Max, B_min float64)float64{
+  return matrix.UnLerp[float64, float64](
+    ((A_x + A_Max) - (B_x + B_min)),
+    ((A_x_t + A_Max) - (B_x_t + B_min)),
+    0,
+  )
 }

@@ -50,10 +50,24 @@ func(Box *Box)Draw(screen *ebiten.Image, screen_geom ebiten.GeoM, worldMatrix *m
 
 func (Box *Box)ColiseSolve(do *Box, faceId int){
   if (faceId == volume.BottomFace) || (faceId == volume.TopFace){
-    Box.Dynamik.Velocity.A[2] = -Box.Dynamik.Velocity.A[2]*(Box.Dynamik.Resistance * do.Dynamik.Resistance)
+    if Box.Dynamik.Immovable {
+      do.Dynamik.Velocity.A[2] = -do.Dynamik.Velocity.A[2]
+      return
+    }
+    if do.Dynamik.Immovable {
+      Box.Dynamik.Velocity.A[2] = -Box.Dynamik.Velocity.A[2]
+      return
+    }
+    speed := Box.Dynamik.Velocity.A[2] - Box.Dynamik.Velocity.A[2]
     
-    //Box.Dynamik.Velocity.A[0] = Box.Dynamik.Velocity.A[2]*(Box.Dynamik.Resistance * do.Dynamik.Resistance)
-    //Box.Dynamik.Velocity.A[1] = Box.Dynamik.Velocity.A[2]*(Box.Dynamik.Resistance * do.Dynamik.Resistance)
+    factor := (Box.Dynamik.Mass*Box.Dynamik.Mass) / (Box.Dynamik.Mass * Box.Dynamik.Mass + do.Dynamik.Mass * do.Dynamik.Mass)
+    
+    do.Dynamik.Velocity.A[2] = speed * factor
+    Box.Dynamik.Velocity.A[2]= -speed * (1 - factor)
+    
+    //Box.Dynamik.Velocity.A[2] = -Box.Dynamik.Velocity.A[2]
+    //do.Dynamik.Velocity.A[2] = -do.Dynamik.Velocity.A[2]
+    
     return
   }
 }

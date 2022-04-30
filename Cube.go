@@ -34,6 +34,7 @@ func NewCube(sx, sy, sz, px, py, pz float64, img *ebiten.Image)Cube{
       py,
       pz,
       0,
+      true,
     ),
   )
   FaceSizes := this.Core.FaceArea()

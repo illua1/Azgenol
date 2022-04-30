@@ -17,14 +17,18 @@ type Physics struct {
   Location, Velocity matrix.Vector[float64, [3]float64]
   Resistance, Gravity, Mass float64
   
+  Immovable bool
+  
   Connect_to volume.BoxContainerFaces[bool]
 }
 
-func NewPhysics(px, py, pz, g float64)Physics{
+func NewPhysics(px, py, pz, g float64, immovable bool)Physics{
   return Physics{
     Location : matrix.Vector[float64, [3]float64]{[3]float64{px, py, pz}},
     Resistance : 0.75,
     Gravity : -g,
+    Immovable : immovable,
+    Mass : 1,
   }
 }
 
@@ -34,13 +38,11 @@ func (physics *Physics)Update(t float64){
   physics.Location.Add(Step)
   
   physics.Velocity.Scale(1 - t*physics.Resistance)
-  physics.Velocity.Add(matrix.Vector3(0,0,physics.Gravity))
+  physics.Velocity.Add(matrix.Vector3(0,0,physics.Gravity*t))
 }
 
 func (physics *Physics)VelocityAdd(x, y, z float64){
-  physics.Velocity.A[0] += x
-  physics.Velocity.A[1] += y
-  physics.Velocity.A[2] += z
+  physics.Velocity.Add(matrix.Vector3(x,y,z))
 }
 func(physics *Physics)Draw(screen *ebiten.Image, screen_geom ebiten.GeoM, worldMatrix *matrix.Matrix[float64, [3]float64, [3][3]float64]){
   

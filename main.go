@@ -3,6 +3,7 @@ package main
 import (
 	"log"
   "math"
+  //"time"
 	"github.com/hajimehoshi/ebiten/v2"
   sort "github.com/illua1/go-helpful/Sort"
   matrix "github.com/illua1/go-helpful/VectorMatrix"
@@ -17,6 +18,7 @@ var(
   
   camera = NewCamera(0,0,0)
   
+  player0 = NewPlayer(0, 0, 1400)
   player = NewPlayer(0, 0, 100)
   
   cube = NewCube(200, 200, 10, 0, 0, 0, Block_plit_face)
@@ -24,6 +26,7 @@ var(
   cube2 = NewCube(200, 200, 10, 100, 0, -300, Block_plit_face)
   
   phys = NewPhysicsCollectro(
+    &player0.This,
     &player.This,
     &cube.This,
     &cube1.This,
@@ -34,6 +37,7 @@ var(
 
 func (g *Programm) Update() error {
 	
+  //time.Sleep(time.Second/14)
   
   
   
@@ -94,6 +98,7 @@ func (g *Programm) Draw(screen *ebiten.Image) {
   cube.Draw(screen, ScreenGeom, &camera)
   
   player.Draw(screen, ScreenGeom, &camera)
+  player0.Draw(screen, ScreenGeom, &camera)
 }
 
 func (g *Programm) Layout(outsideWidth, outsideHeight int) (int, int) {

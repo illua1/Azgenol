@@ -22,7 +22,8 @@ func NewPlayer(x,y,z float64)Player{
           x,
           y,
           z,
-          10,
+          5,
+          false,
         ),
       ),
       NewImageDrawer[float64](
