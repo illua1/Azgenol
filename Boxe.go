@@ -1,27 +1,28 @@
 package main
 
 import (
-  "image/color"
+	"image/color"
 	//"github.com/hajimehoshi/ebiten/v2"
 	//"github.com/hajimehoshi/ebiten/v2/ebitenutil"
-  //matrix "github.com/illua1/go-helpful/VectorMatrix"
-  volume "github.com/illua1/go-helpful/Volume"
+	//matrix "github.com/illua1/go-helpful/VectorMatrix"
+	volume "github.com/illua1/go-helpful/Volume"
 )
 
-type Box struct{
-  Core volume.Box[float64]
-  Dynamik Physics
-  DrawColor color.Color
+type Box struct {
+	Core      volume.Box[float64]
+	Dynamik   Physics
+	DrawColor color.Color
 }
 
-func NewBox(x, y, z float64, physics Physics)Box{
-  x, y, z = x/2, y/2, z/2
-  return Box{
-    Core : volume.NewBox[float64](-x, -y, -z, x, y, z),
-    Dynamik : physics,
-    DrawColor : color.RGBA{255,255,255,255},
-  }
+func NewBox(x, y, z float64, physics Physics) Box {
+	x, y, z = x/2, y/2, z/2
+	return Box{
+		Core:      volume.NewBox[float64](-x, -y, -z, x, y, z),
+		Dynamik:   physics,
+		DrawColor: color.RGBA{255, 255, 255, 255},
+	}
 }
+
 /*
 func(Box *Box)Draw(screen *ebiten.Image, location Location3, worldMatrix *matrix.Matrix[float64, [3]float64, [3][3]float64]){
   points := Box.Core.Points()
