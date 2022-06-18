@@ -4,8 +4,9 @@ import (
 	"log"
   "math"
   //"time"
+  "image/color"
 	"github.com/hajimehoshi/ebiten/v2"
-  sort "github.com/illua1/go-helpful/Sort"
+  //sort "github.com/illua1/go-helpful/Sort"
   matrix "github.com/illua1/go-helpful/VectorMatrix"
 )
 
@@ -18,7 +19,7 @@ var(
   
   camera = NewCamera(0,0,0)
   
-  player0 = NewPlayer(0, 0, 1400)
+  //player0 = NewPlayer(0, 0, 1400)
   player = NewPlayer(0, 0, 100)
   
   cube = NewCube(200, 200, 10, 0, 0, 0, Block_plit_face)
@@ -26,20 +27,27 @@ var(
   cube2 = NewCube(200, 200, 10, 100, 0, -300, Block_plit_face)
   
   phys = NewPhysicsCollectro(
-    &player0.This,
+    //&player0.This,
     &player.This,
     &cube.This,
     &cube1.This,
     &cube2.This,
   )
   
+  render = NewRenderPipeLine(
+    &player,
+    //&player0,
+    &cube,
+    &cube1,
+    &cube2,
+  )
 )
 
 func (g *Programm) Update() error {
 	
   //time.Sleep(time.Second/14)
   
-  
+  player.This.DrawColor = color.RGBA{255,0,0,255}
   
   if ebiten.IsKeyPressed(ebiten.KeyW) {
     player.This.Dynamik.VelocityAdd(0, -5, 0)
@@ -55,7 +63,7 @@ func (g *Programm) Update() error {
   }
   if ebiten.IsKeyPressed(ebiten.KeySpace) {
     if !JumpFlag {
-      player.This.Dynamik.VelocityAdd(0, 0, 100)
+      player.This.Dynamik.VelocityAdd(0, 0, 400)
       JumpFlag = true
     }
   } else {
@@ -84,21 +92,9 @@ func (g *Programm) Update() error {
 }
 
 func (g *Programm) Draw(screen *ebiten.Image) {
-  x,y := screen.Size()
-  //op := &ebiten.DrawImageOptions{}
-  ScreenGeom := ebiten.GeoM{}
-  ScreenGeom.Scale(float64(sort.MaxF(x, y))/1000, float64(sort.MaxF(x, y))/1000)
-  ScreenGeom.Translate(float64(x/2), float64(y/2))
-  GeomMatrix := ebiten.GeoM{}
-  camera.Matrix.Slise(0,0,2,2).FillTo(GeomMatrix.SetElement)
-  GeomMatrix.Translate(GeomMatrix.Apply(-camera.Location.A[0], -camera.Location.A[1]))
+  var Frame_Camear = camera
+  render.Draw(screen, &Frame_Camear)
   
-  cube2.Draw(screen, ScreenGeom, &camera)
-  cube1.Draw(screen, ScreenGeom, &camera)
-  cube.Draw(screen, ScreenGeom, &camera)
-  
-  player.Draw(screen, ScreenGeom, &camera)
-  player0.Draw(screen, ScreenGeom, &camera)
 }
 
 func (g *Programm) Layout(outsideWidth, outsideHeight int) (int, int) {

@@ -2,9 +2,9 @@ package main
 
 import (
   "image/color"
-	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
-  matrix "github.com/illua1/go-helpful/VectorMatrix"
+	//"github.com/hajimehoshi/ebiten/v2"
+	//"github.com/hajimehoshi/ebiten/v2/ebitenutil"
+  //matrix "github.com/illua1/go-helpful/VectorMatrix"
   volume "github.com/illua1/go-helpful/Volume"
 )
 
@@ -22,8 +22,8 @@ func NewBox(x, y, z float64, physics Physics)Box{
     DrawColor : color.RGBA{255,255,255,255},
   }
 }
-
-func(Box *Box)Draw(screen *ebiten.Image, screen_geom ebiten.GeoM, worldMatrix *matrix.Matrix[float64, [3]float64, [3][3]float64]){
+/*
+func(Box *Box)Draw(screen *ebiten.Image, location Location3, worldMatrix *matrix.Matrix[float64, [3]float64, [3][3]float64]){
   points := Box.Core.Points()
   edges := Box.Core.Edges()
   for i := range edges {
@@ -46,28 +46,4 @@ func(Box *Box)Draw(screen *ebiten.Image, screen_geom ebiten.GeoM, worldMatrix *m
     ebitenutil.DrawLine(screen, x1, y1, x2, y2, Box.DrawColor)
   }
   Box.Dynamik.Draw(screen, screen_geom, worldMatrix)
-}
-
-func (Box *Box)ColiseSolve(do *Box, faceId int){
-  if (faceId == volume.BottomFace) || (faceId == volume.TopFace){
-    if Box.Dynamik.Immovable {
-      do.Dynamik.Velocity.A[2] = -do.Dynamik.Velocity.A[2]
-      return
-    }
-    if do.Dynamik.Immovable {
-      Box.Dynamik.Velocity.A[2] = -Box.Dynamik.Velocity.A[2]
-      return
-    }
-    speed := Box.Dynamik.Velocity.A[2] - Box.Dynamik.Velocity.A[2]
-    
-    factor := (Box.Dynamik.Mass*Box.Dynamik.Mass) / (Box.Dynamik.Mass * Box.Dynamik.Mass + do.Dynamik.Mass * do.Dynamik.Mass)
-    
-    do.Dynamik.Velocity.A[2] = speed * factor
-    Box.Dynamik.Velocity.A[2]= -speed * (1 - factor)
-    
-    //Box.Dynamik.Velocity.A[2] = -Box.Dynamik.Velocity.A[2]
-    //do.Dynamik.Velocity.A[2] = -do.Dynamik.Velocity.A[2]
-    
-    return
-  }
-}
+}*/

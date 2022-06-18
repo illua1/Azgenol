@@ -10,8 +10,8 @@ var(
 )
 
 type ImageDrawer struct {
-  GeoM ebiten.GeoM
   Img *ebiten.Image
+  GeoM ebiten.GeoM
 }
 
 func NewImageDrawer[Value values.Values](x_size, y_size Value, img *ebiten.Image)ImageDrawer{
@@ -25,12 +25,15 @@ func NewImageDrawer[Value values.Values](x_size, y_size Value, img *ebiten.Image
     float64(x_size)/float64(x),
     float64(y_size)/float64(y),
   )
-  return ImageDrawer{geom, img}
+  return ImageDrawer{img, geom}
 }
 
 func (imageDrawe ImageDrawer)Draw(screen *ebiten.Image, geom ebiten.GeoM){
-  imageDrawe.GeoM.Concat(geom)
-  geom = imageDrawe.GeoM
-  op.GeoM = geom
+  op.GeoM = imageDrawe.GetGeoM(geom)
   screen.DrawImage(imageDrawe.Img, op)
+}
+
+func (imageDrawe ImageDrawer) GetGeoM(concat ebiten.GeoM) ebiten.GeoM {
+  imageDrawe.GeoM.Concat(concat)
+  return imageDrawe.GeoM
 }

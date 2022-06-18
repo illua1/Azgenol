@@ -87,16 +87,9 @@ func NewCube(sx, sy, sz, px, py, pz float64, img *ebiten.Image)Cube{
   }
 }
 
-func (cube *Cube)Draw(screen *ebiten.Image, GeoM ebiten.GeoM, camera *Camera){
-  
-  var (
-    screen_location_geom = GeoM
-  )
-  
-  location := cube.This.Dynamik.Location
-  location.Sub(camera.Location)
-  global_location := camera.Matrix.MulVector(location)
-  
+func(cube *Cube) RenderCustom(append_draw RenderCallAppend, objectm ObjectMatrix, camera *Camera){
+  global_location := cube.This.Dynamik.Location
+  global_location.Sub(camera.Location)
   
   is_driw := [6]bool{
     camera.Matrix.A[2][2] < 0,
@@ -106,29 +99,19 @@ func (cube *Cube)Draw(screen *ebiten.Image, GeoM ebiten.GeoM, camera *Camera){
     camera.Matrix.A[2][0] < 0,
     camera.Matrix.A[2][0] >= 0,
   }
-  {
-    sx := GeoM.Element(0,0)*global_location.A[0] + GeoM.Element(1,0)*global_location.A[1]
-    sy := GeoM.Element(0,1)*global_location.A[0] + GeoM.Element(1,1)*global_location.A[1]
-    screen_location_geom.Translate(sx, sy)
-  }
+  
   for i, location := range cube.This.Core.FaceCentres() {
-    if is_driw[i]{
-      var location_ = camera.Matrix.MulVector(matrix.Vector[float64, [3]float64]{
-        A:[3]float64{
-          float64(location.X),
-          float64(location.Y),
-          float64(location.Z),
-        },
-      })
-      {
-        GeoM = screen_location_geom
-        lx := GeoM.Element(0,0)*location_.A[0] + GeoM.Element(1,0)*location_.A[1]
-        ly := GeoM.Element(0,1)*location_.A[0] + GeoM.Element(1,1)*location_.A[1]
-        GeoM.Translate(lx, ly)
-      }
+    if is_driw[i] {
+      var location_global = matrix.Vector3[float64](float64(location.X), float64(location.Y), float64(location.Z))
+      location_global.Sub(global_location)
+      var location_ = camera.Matrix.MulVector(location_global)
       cube.Faces[i].MatrixUpdate(camera.MatrixInvert.Mull(Cube_Matrixes_Constant[i]))
-      cube.Faces[i].Draw(screen, GeoM)
+      var img_draw = cube.Faces[i].ToImageDrawer()
+      img_draw.GeoM.Translate(-location_.A[0], -location_.A[1])
+      append_draw(
+        img_draw,
+        Value(cube.This.Dynamik.Location.A[0]),
+      )
     }
   }
-  cube.This.Draw(screen, screen_location_geom, &camera.Matrix)
 }

@@ -1,7 +1,6 @@
 package main
 
 import (
-  
   "image/color"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
@@ -25,7 +24,7 @@ type Physics struct {
 func NewPhysics(px, py, pz, g float64, immovable bool)Physics{
   return Physics{
     Location : matrix.Vector[float64, [3]float64]{[3]float64{px, py, pz}},
-    Resistance : 0.75,
+    Resistance : 1.,
     Gravity : -g,
     Immovable : immovable,
     Mass : 1,
@@ -37,7 +36,7 @@ func (physics *Physics)Update(t float64){
   Step.Scale(t)
   physics.Location.Add(Step)
   
-  physics.Velocity.Scale(1 - t*physics.Resistance)
+  physics.Velocity.Scale(1 - t)
   physics.Velocity.Add(matrix.Vector3(0,0,physics.Gravity*t))
 }
 
