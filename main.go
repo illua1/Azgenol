@@ -44,7 +44,6 @@ var(
 )
 
 func (g *Programm) Update() error {
-	
   //time.Sleep(time.Second/14)
   
   player.This.DrawColor = color.RGBA{255,0,0,255}
