@@ -6,11 +6,19 @@ set BUILD_DIR=bin
 set BUILD_MOD=%1
 
 
-
 IF DEFINED BUILD_MOD (
-  echo Debug mod
-) ELSE (
-  echo 
+  IF "%BUILD_MOD%"=="init" (
+    echo Init...
+    go mod init %PROJECT_NAME%
+    go install -v "github.com/tc-hib/go-winres@latest"
+    go mod tidy
+  )ELSE IF "%BUILD_MOD%"=="help" (
+    echo Supported commands:
+    echo - make = Just build
+    echo - make init = first make
+    echo - make help = support info
+    goto END
+  )
 )
 goto PREPARE_BUILD_DIR
 
@@ -36,7 +44,14 @@ IF exist %BUILD_DIR%/Assets (
   xcopy Assets "%BUILD_DIR%/Assets" /E /H /I /Q
   echo Assets copied
 )
+goto PREPARE_WIN_DATA_RES
+
+
+
+:PREPARE_WIN_DATA_RES
+go-winres make --in="./BuildData/WinDataRes/WindowsDataRes.json" --out="rsrc_%PROJECT_NAME%"
 goto BUILD
+
 
 
 :BUILD
@@ -47,8 +62,16 @@ IF exist %PROJECT_NAME%.exe (
   echo File was deleted
 )
 cd ..
-go build -o="%BUILD_DIR%/%PROJECT_NAME%.exe" .
+go build -ldflags="-H=windowsgui" -o="%BUILD_DIR%/%PROJECT_NAME%.exe" .
+goto CLEAR_WIN_DATA_RES
+
+
+
+:CLEAR_WIN_DATA_RES
+del "rsrc_%PROJECT_NAME%_windows_amd64.syso"
+del "rsrc_%PROJECT_NAME%_windows_386.syso"
 goto RUN
+
 
 
 :RUN

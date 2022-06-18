@@ -58,9 +58,9 @@ func (g *Programm) Draw(screen *ebiten.Image) {
 	)
 
 	var geom3_1 = types.NewGeoM(-150, 0, 0)
-	geom3_1.Matrix = matrix.Rotate3x3_YXZ[float64]([3]float64{0, -time, 0})
+	geom3_1.Matrix = matrix.Rotate3x3_YXZ[float64]([3]float64{0, time, 0})
 	var geom3_2 = types.NewGeoM(150, 0, 0)
-	geom3_2.Matrix = matrix.Rotate3x3_YXZ[float64]([3]float64{0, time, 0})
+	geom3_2.Matrix = matrix.Rotate3x3_YXZ[float64]([3]float64{0, -time, 0})
 	var geom3_3 = types.NewGeoM(0, 0, 0)
 	geom3_3.Matrix = matrix.Rotate3x3_YXZ[float64]([3]float64{0, 0, time})
 	var cube3 = render.NewCube(
