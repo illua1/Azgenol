@@ -31,25 +31,25 @@ var (
   }
 )
 
-func cube_driwe_face_check(i int, matrix *types.Matrix3) bool {
+func box_driwe_face_check(i int, matrix *types.Matrix3) bool {
   switch i {
     case 0 : {
-      return !(matrix.A[2][2] < 0)
+      return matrix.A[2][2] < 0
     }
     case 1 : {
-      return !(matrix.A[2][2] >= 0)
+      return matrix.A[2][2] >= 0
     }
     case 2 : {
-      return !(matrix.A[2][1] < 0)
+      return matrix.A[2][1] < 0
     }
     case 3 : {
-      return !(matrix.A[2][1] >= 0)
+      return matrix.A[2][1] >= 0
     }
     case 4 : {
-      return !(matrix.A[2][0] < 0)
+      return matrix.A[2][0] < 0
     }
     case 5 : {
-      return !(matrix.A[2][0] >= 0)
+      return matrix.A[2][0] >= 0
     }
   }
   return false
@@ -73,35 +73,35 @@ func NewBox(sx, sy, sz float64, img *ebiten.Image)Box{
       sz,
     },
     BoxFace{
-      draw.NewImageDrawer(sy, sz, img),
-      sx,
-    },
-    BoxFace{
-      draw.NewImageDrawer(sy, sz, img),
-      sx,
-    },
-    BoxFace{
       draw.NewImageDrawer(sx, sz, img),
       sy,
     },
     BoxFace{
       draw.NewImageDrawer(sx, sz, img),
       sy,
+    },
+    BoxFace{
+      draw.NewImageDrawer(sz, sy, img),
+      sx,
+    },
+    BoxFace{
+      draw.NewImageDrawer(sz, sy, img),
+      sx,
     },
   }
 }
 
-func(box *Box)RenderBox(camera *types.Camera, location types.Vector3) (ret [3]draw.ImageDrawer) {
+func(box *Box)Render(camera *types.Camera, location types.Vector3) (ret [3]draw.ImageDrawer) {
   var offset int = 0
   for i := range *box {
-    if cube_driwe_face_check(i, &camera.MatrixInvert) {
+    if box_driwe_face_check(i, &camera.Matrix) {
       var location = location
       location.Sub(camera.Location.Vector)
       var face_location = Box_Faces_Vectors[i]
       face_location.Scale(-box[i].float64)
       location.Add(face_location.Vector)
       location.Vector = camera.MatrixInvert.MulVector(location.Vector)
-      var face_matrix = types.Matrix3{camera.Matrix.Mull(Box_Faces_Matrixes[i].Matrix)}
+      var face_matrix = types.Matrix3{camera.MatrixInvert.Mull(Box_Faces_Matrixes[i].Matrix)}
       ret[offset] = box[i].ImageDrawer.ToImageDrawer(
         location.Project(face_matrix.Project()),
       )

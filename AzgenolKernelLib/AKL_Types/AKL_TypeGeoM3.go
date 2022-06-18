@@ -10,9 +10,9 @@ type GeoM struct {
   Matrix3
 }
 
-func NewGeoM()GeoM{
+func NewGeoM(x,y,z float64)GeoM{
   return GeoM{
-    Vector3{},
+    NewVector3(x,y,z),
     Matrix3{
       matrix.Matrix3x3[float64](),
     },
@@ -28,7 +28,7 @@ func (geom GeoM) Project() ebiten.GeoM{
 func(geom GeoM) Concat(in GeoM) (ret GeoM) {
   ret = GeoM{
     Vector3{geom.MulVector(in.Vector)},
-    Matrix3{geom.Matrix.Mull(in.Matrix)},
+    Matrix3{in.Matrix.Mull(geom.Matrix)},
   }
   ret.Vector.Add(geom.Vector)
   return

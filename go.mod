@@ -5,7 +5,7 @@ go 1.18
 require (
 	github.com/hajimehoshi/ebiten/v2 v2.2.6
 	github.com/illua1/Game-UI v0.0.0-20220412181653-4efb199a3e49
-	github.com/illua1/go-helpful v0.0.0-20220502114421-cba968faad40
+	github.com/illua1/go-helpful v0.0.0-20220618192249-1e0cd4e3bf95
 	golang.org/x/image v0.0.0-20210628002857-a66eb6448b8d
 )
 
