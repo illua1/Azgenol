@@ -25,6 +25,6 @@ func(camera *Camera)SetMatrix(matrix Matrix3){
 }
 
 func(camera *Camera)SetAngle(x,y,z float64){
-  camera.Matrix = Matrix3{matrix.Rotate3x3_XYZ[float64]([3]float64{x,y,z})}
+  camera.Matrix = Matrix3{matrix.Rotate3x3_ZYX[float64]([3]float64{x,y,z})}
   camera.MatrixInvert = Matrix3{camera.Matrix.Invert()}
 }

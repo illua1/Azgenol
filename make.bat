@@ -57,4 +57,4 @@ cd %BUILD_DIR%
 cd ..
 
 :END
-pause
+::pause

@@ -1,8 +1,9 @@
 package AKL_StaticTypes
 
 import (
-	"github.com/hajimehoshi/ebiten/v2"
   matrix "github.com/illua1/go-helpful/VectorMatrix"
+  
+	"github.com/hajimehoshi/ebiten/v2"
 )
 
 type Vector3 struct{

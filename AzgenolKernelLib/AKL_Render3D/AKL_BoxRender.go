@@ -5,10 +5,11 @@ import(
   
 	"github.com/hajimehoshi/ebiten/v2"
   
-  volume "github.com/illua1/go-helpful/Volume"
-  matrix "github.com/illua1/go-helpful/VectorMatrix"
   types "github.com/illua1/Azgenol/AzgenolKernelLib/AKL_Types"
   draw "github.com/illua1/Azgenol/AzgenolKernelLib/AKL_Drawers"
+  
+  volume "github.com/illua1/go-helpful/Volume"
+  matrix "github.com/illua1/go-helpful/VectorMatrix"
 )
 
 var (
@@ -22,12 +23,12 @@ var (
   }
   
   Box_Faces_Vectors = volume.BoxContainerFaces[types.Vector3]{
-    types.NewVector3(0,0,0.5),
     types.NewVector3(0,0,-0.5),
-    types.NewVector3(0,0.5,0),
+    types.NewVector3(0,0,0.5),
     types.NewVector3(0,-0.5,0),
-    types.NewVector3(0.5,0,0),
+    types.NewVector3(0,0.5,0),
     types.NewVector3(-0.5,0,0),
+    types.NewVector3(0.5,0,0),
   }
 )
 

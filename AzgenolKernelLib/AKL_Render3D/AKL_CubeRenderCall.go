@@ -1,14 +1,7 @@
 package AKL_SerfaceRender
 
 import(
-  //"math"
-  
-	//"github.com/hajimehoshi/ebiten/v2"
-  
-  //volume "github.com/illua1/go-helpful/Volume"
-  //matrix "github.com/illua1/go-helpful/VectorMatrix"
   types "github.com/illua1/Azgenol/AzgenolKernelLib/AKL_Types"
-  //draw "github.com/illua1/Azgenol/AzgenolKernelLib/AKL_Drawers"
   pipeline "github.com/illua1/Azgenol/AzgenolKernelLib/AKL_RenderPipeLine"
 )
 
@@ -28,8 +21,7 @@ func(cube *Cube) RenderCustom(call pipeline.RenderCallAppend, camera *types.Came
       var location = cube.Vector3
       location.Sub(camera.Location.Vector)
       var face_location = Box_Faces_Vectors[i]
-      face_location.Scale(-cube.Box[i].float64)
-      
+      face_location.Scale(cube.Box[i].float64)
       face_location.Vector = cube.GeoM.MulVector(face_location.Vector)
       location.Add(face_location.Vector)
       location.Vector = camera.MatrixInvert.MulVector(location.Vector)

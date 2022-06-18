@@ -1,8 +1,9 @@
 package AKL_Drawers
 
 import (
-	"github.com/hajimehoshi/ebiten/v2"
   values "github.com/illua1/go-helpful"
+  
+	"github.com/hajimehoshi/ebiten/v2"
 )
 
 type ImageDrawer struct {
