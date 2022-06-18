@@ -6,8 +6,12 @@ import (
   //"time"
   "image/color"
 	"github.com/hajimehoshi/ebiten/v2"
-  //sort "github.com/illua1/go-helpful/Sort"
+  sort "github.com/illua1/go-helpful/Sort"
   matrix "github.com/illua1/go-helpful/VectorMatrix"
+  
+  types "github.com/illua1/Azgenol/AzgenolKernelLib/AKL_Types"
+  draw "github.com/illua1/Azgenol/AzgenolKernelLib/AKL_Drawers"
+  render "github.com/illua1/Azgenol/AzgenolKernelLib/AKL_Render3D"
 )
 
 type Programm struct {}
@@ -17,7 +21,7 @@ var(
   
   JumpFlag bool = false
   
-  camera = NewCamera(0,0,0)
+  camera = types.NewCamera(0,0,0)
   
   //player0 = NewPlayer(0, 0, 1400)
   player = NewPlayer(0, 0, 100)
@@ -33,14 +37,14 @@ var(
     &cube1.This,
     &cube2.This,
   )
-  
+  /*
   render = NewRenderPipeLine(
     &player,
     //&player0,
     &cube,
     &cube1,
     &cube2,
-  )
+  )*/
 )
 
 func (g *Programm) Update() error {
@@ -80,19 +84,49 @@ func (g *Programm) Update() error {
     r[0] = float64(y)/100
     /*
     */
-    camera.SetMatrix(matrix.Rotate3x3_YXZ[float64](r))
+    camera.SetMatrix(types.Matrix3{matrix.Rotate3x3_ZYX[float64](r)})
   }
-  
+  /*
   for i := range camera.Location.A {
     camera.Location.A[i] = matrix.Lerp(camera.Location.A[i], player.This.Dynamik.Location.A[i], 0.06)
   }
-  
+  */
   return nil
 }
 
 func (g *Programm) Draw(screen *ebiten.Image) {
-  var Frame_Camear = camera
-  render.Draw(screen, &Frame_Camear)
+  //var Frame_Camear = camera
+  
+  x,y := screen.Size()
+  var geom = ebiten.GeoM{}
+  geom.Scale(float64(sort.MaxF(x, y))/1000, float64(sort.MaxF(x, y))/1000)
+  geom.Translate(float64(x/2), float64(y/2))
+  
+  var box = render.NewBox(100,100,100, Block_plit_face)
+  for _, img := range box.RenderBox(&camera, types.NewVector3(0,0,0)) {
+    img.Draw(screen, geom)
+  }
+  for _, img := range box.RenderBox(&camera, types.NewVector3(0,150,0)) {
+    img.Draw(screen, geom)
+  }
+  for _, img := range box.RenderBox(&camera, types.NewVector3(0,-150,0)) {
+    img.Draw(screen, geom)
+  }
+  for _, img := range box.RenderBox(&camera, types.NewVector3(150,0,0)) {
+    img.Draw(screen, geom)
+  }
+  for _, img := range box.RenderBox(&camera, types.NewVector3(-150,0,0)) {
+    img.Draw(screen, geom)
+  }
+  
+  render.RenderDrawer(draw.NewImageDrawer(50, 50, Block_plit_face), &camera, types.NewVector3(0,0,100)).Draw(screen, geom)
+  //render.RenderDrawer(draw.NewImageDrawer(50, 50, Block_plit_face), &camera, types.NewVector3(50,0,0)).Draw(screen, geom)
+  //render.RenderDrawer(draw.NewImageDrawer(50, 50, Block_plit_face), &camera, types.NewVector3(0,50,0)).Draw(screen, geom)
+  //render.RenderDrawer(draw.NewImageDrawer(50, 50, Block_plit_face), &camera, types.NewVector3(50,50,0)).Draw(screen, geom)
+  
+  
+  
+  //render.Draw(screen, &Frame_Camear)
   
 }
 

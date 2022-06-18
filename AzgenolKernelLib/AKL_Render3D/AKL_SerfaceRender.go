@@ -1,9 +1,22 @@
 package AKL_SerfaceRender
 
 import(
-  draw "githun.com/illua/Azgenol/AzgenolKernelLib/AKL_Drawers"
+  types "github.com/illua1/Azgenol/AzgenolKernelLib/AKL_Types"
+  draw "github.com/illua1/Azgenol/AzgenolKernelLib/AKL_Drawers"
 )
 
-func Render[Drawer draw.ImageDrawers](img Drawer){
-  
+func RenderDrawer(img draw.ImageDrawer, camera *types.Camera, location types.Vector3) draw.ImageDrawer {
+  location.Sub(camera.Location.Vector)
+  location.Vector = camera.MatrixInvert.MulVector(location.Vector)
+  return img.ToImageDrawer(
+    location.Project(camera.MatrixInvert.Project()),
+  )
+}
+
+func RenderSerface(img draw.ImageSerface, camera *types.Camera, location types.Vector3) draw.ImageDrawer {
+  location.Sub(camera.Location.Vector)
+  location.Vector = camera.MatrixInvert.MulVector(location.Vector)
+  return img.ToImageDrawer(
+    location.Project(camera.MatrixInvert.Project()),
+  )
 }
