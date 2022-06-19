@@ -74,19 +74,19 @@ func NewBox(sx, sy, sz float64, img *ebiten.Image)Box{
       sz,
     },
     BoxFace{
-      draw.NewImageDrawer(sx, sz, img),
+      draw.NewImageDrawer(sx, sz, img).Flip(false, true),
       sy,
     },
     BoxFace{
-      draw.NewImageDrawer(sx, sz, img),
+      draw.NewImageDrawer(sx, sz, img).Flip(true, false),
       sy,
     },
     BoxFace{
-      draw.NewImageDrawer(sz, sy, img),
+      draw.NewImageDrawerR(sz, sy, 1, img).Rot(-1.0).Flip(true, false),
       sx,
     },
     BoxFace{
-      draw.NewImageDrawer(sz, sy, img),
+      draw.NewImageDrawerR(sz, sy, 1, img).Rot(1.0).Flip(true, false),
       sx,
     },
   }

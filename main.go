@@ -2,7 +2,8 @@ package main
 
 import (
 	"log"
-
+  "math"
+  
 	types "github.com/illua1/Azgenol/AzgenolKernelLib/AKL_Types"
 	render "github.com/illua1/Azgenol/AzgenolKernelLib/AKL_Render3D"
 	components "github.com/illua1/Azgenol/AzgenolKernelLib/AKL_Components"
@@ -25,46 +26,46 @@ var (
 
 var(
   cube0 = render.NewCube(
-		render.NewBox(100, 100, 100, Block_plit_face),
+		render.NewBox(100, 100, 100, Block_wall_face),
 		types.NewGeoM(150, 150, 0),
 	)
 	cube1 = render.NewCube(
-		render.NewBox(100, 100, 100, Block_plit_face),
+		render.NewBox(100, 100, 100, Block_wall_face),
 		types.NewGeoM(0, 150, 0),
 	)
 	cube2 = render.NewCube(
-		render.NewBox(100, 100, 100, Block_plit_face),
+		render.NewBox(100, 100, 100, Block_wall_face),
 		types.NewGeoM(-150, 150, 0),
 	)
   
 	cube3 = render.NewCube(
-		render.NewBox(100, 100, 100, Block_plit_face),
+		render.NewBox(100, 100, 100, Block_wall_face),
 		types.NewGeoM(-150, 0, 0),
 	)
 	cube4 = render.NewCube(
-		render.NewBox(100, 100, 100, Block_plit_face),
+		render.NewBox(100, 100, 100, Block_wall_face),
 		types.NewGeoM(150, 0, 0),
 	)
 	cube5 = render.NewCube(
-		render.NewBox(100, 100, 100, Block_plit_face),
+		render.NewBox(100, 100, 100, Block_wall_face),
 		types.NewGeoM(0, 0, 0),
 	)
   
 	cube6 = render.NewCube(
-		render.NewBox(100, 100, 100, Block_plit_face),
+		render.NewBox(100, 100, 100, Block_wall_face),
 		types.NewGeoM(-150, -150, 0),
 	)
 	cube7 = render.NewCube(
-		render.NewBox(100, 100, 100, Block_plit_face),
+		render.NewBox(100, 100, 100, Block_wall_face),
 		types.NewGeoM(0, -150, 0),
 	)
 	cube8 = render.NewCube(
-		render.NewBox(100, 100, 100, Block_plit_face),
+		render.NewBox(100, 100, 100, Block_wall_face),
 		types.NewGeoM(150, -150, 0),
 	)
 
 	cube10 = render.NewCube(
-		render.NewBox(50, 50, 100, Block_plit_face),
+		render.NewBox(50, 50, 100, Block_wall_face),
 		geom3_3.Concat(types.NewGeoM(0, 50, 100)),
 	)
   
@@ -72,21 +73,22 @@ var(
   geom3_1 = &cube3.Matrix
   geom3_2 = &cube4.Matrix
   geom3_3 = &cube5.GeoM
-  geom3_4 = &cube6.Matrix
+  geom3_4 = &cube7.Matrix
   geom3_5 = &cube10.GeoM
 )
 
 func (g *Programm) Update() error {
 
-	time += 0.1
-
+	time += 0.03
+/*
 	x, y := ebiten.CursorPosition()
 	camera.SetAngle(
 		float64(y)/100,
 		0.0,
 		-float64(x)/100,
 	)
-
+*/
+	camera.SetAngle(-math.Pi/4, 0, -math.Pi/4)
 	return nil
 }
 
@@ -120,12 +122,12 @@ func main() {
 	prog := Programm{}
 
   prog.Add(
+		&cube5,
 		&cube0,
 		&cube1,
 		&cube2,
 		&cube3,
 		&cube4,
-		&cube5,
 		&cube6,
 		&cube7,
 		&cube8,

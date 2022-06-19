@@ -58,6 +58,8 @@ var (
         Ground = Textures.Dir("Ground")
           First_b = Ground.Dir("First")
             Block_plit_face = TextureOpen(First_b, "plit_face.png", Nil_Texture)
+            Block_re_face = TextureOpen(First_b, "block re.png", Nil_Texture)
+            Block_wall_face = TextureOpen(First_b, "wall 1-1-1.png", Nil_Texture)
       Fonts = Assets.Dir("Fonts")
         FonFont = FontOpen(Fonts, "Ranika.otf", Nil_Font)
 )
