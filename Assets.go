@@ -19,12 +19,12 @@ import (
 var (
 	//go:embed .\BuildData\Assets\Textures\Nil_Texture.png
 	Nil_Texture_png   string
-	Nil_Texture, _, _ = ebitenutil.NewImageFromReader(strings.NewReader(Nil_Texture_png))
+	Nil_Texture, _, _ = ebitenutil.NewImageFromReader(strings.NewReader(Nil_Texture_png))/*
 	//go:embed .\BuildData\Assets\Fonts\calibri-bold.ttf
 	Nil_Font_otf string
-	Nil_Font     font.Face = nul_font_init(Nil_Font_otf)
+	Nil_Font     font.Face = nul_font_init(Nil_Font_otf)*/
 )
-
+/*
 func nul_font_init(str string) font.Face {
 	nil_font, err := opentype.Parse([]byte(str))
 	if err != nil {
@@ -44,7 +44,7 @@ func nul_font_init(str string) font.Face {
 	}
 	return ffff
 }
-
+*/
 var (
   Exist, _ = os.Executable()
   MainPath = NewPath(Exist)
@@ -61,7 +61,7 @@ var (
             Block_re_face = TextureOpen(First_b, "block re.png", Nil_Texture)
             Block_wall_face = TextureOpen(First_b, "wall 1-1-1.png", Nil_Texture)
       Fonts = Assets.Dir("Fonts")
-        FonFont = FontOpen(Fonts, "Ranika.otf", Nil_Font)
+        //FonFont = FontOpen(Fonts, "Ranika.otf", Nil_Font)
 )
 
 func TextureOpen(p Path, f string, empty_texture *ebiten.Image) *ebiten.Image {

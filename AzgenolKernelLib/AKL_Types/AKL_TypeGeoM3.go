@@ -28,15 +28,14 @@ func (geom GeoM) Project() ebiten.GeoM{
 
 func(geom GeoM) Concat(in GeoM) (ret GeoM) {
   ret = GeoM{
-    Vector3{geom.MulVector(in.Vector)},
+    geom.Apply(in.Vector3),
     Matrix3{in.Matrix.Mull(geom.Matrix)},
   }
-  ret.Vector.Add(geom.Vector)
   return
 }
 
 func(geom GeoM) Apply(vector Vector3) (ret Vector3) {
   ret = Vector3{geom.MulVector(vector.Vector)}
-  ret.Add(vector.Vector)
+  ret.Add(geom.Vector)
   return
 }
