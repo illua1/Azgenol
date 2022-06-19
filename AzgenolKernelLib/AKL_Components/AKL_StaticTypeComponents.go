@@ -1,1 +1,1 @@
-package AKL_StaticTypesComponents
+package AKL_TypeComponents

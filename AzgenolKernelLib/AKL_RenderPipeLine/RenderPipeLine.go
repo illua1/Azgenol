@@ -76,5 +76,5 @@ func(rp *RenderPipeLine) Draw (screen *ebiten.Image, camera *types.Camera){
       },
     )
   }
-  
+  rp.First = nil
 }
