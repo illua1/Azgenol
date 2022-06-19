@@ -29,3 +29,7 @@ type RenderCallAppend func(draw.ImageDrawer, float64)
 type RenderObject interface {
   RenderCustom(RenderCallAppend, *types.Camera)
 }
+
+type DeleteRenderObject interface{
+  SetRenderDelete(func())
+}

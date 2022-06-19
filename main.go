@@ -3,6 +3,7 @@ package main
 import (
 	"log"
   "math"
+  "time"
   
 	types "github.com/illua1/Azgenol/AzgenolKernelLib/AKL_Types"
 	render "github.com/illua1/Azgenol/AzgenolKernelLib/AKL_Render3D"
@@ -15,11 +16,11 @@ import (
 )
 
 type Programm struct{
-  components.ComponentCollector
+  System components.ComponentSystem
 }
 
 var (
-	time float64
+	time_ float64
 
 	camera = types.NewCamera(0, 0, 0)
 )
@@ -79,7 +80,7 @@ var(
 
 func (g *Programm) Update() error {
 
-	time += 0.03
+	time_ += 0.03
 /*
 	x, y := ebiten.CursorPosition()
 	camera.SetAngle(
@@ -100,14 +101,14 @@ func (g *Programm) Draw(screen *ebiten.Image) {
 	geom.Translate(float64(x/2), float64(y/2))
 
 
-  *geom3_0 = matrix.Rotate3x3_YXZ[float64]([3]float64{-time, 0, 0})
-  *geom3_1 = matrix.Rotate3x3_YXZ[float64]([3]float64{0, time, 0})
-  *geom3_2 = matrix.Rotate3x3_YXZ[float64]([3]float64{0, -time, 0})
-  geom3_3.Matrix = matrix.Rotate3x3_YXZ[float64]([3]float64{0, 0, time})
-  *geom3_4 = matrix.Rotate3x3_YXZ[float64]([3]float64{time, 0, 0})
+  *geom3_0 = matrix.Rotate3x3_YXZ[float64]([3]float64{-time_, 0, 0})
+  *geom3_1 = matrix.Rotate3x3_YXZ[float64]([3]float64{0, time_, 0})
+  *geom3_2 = matrix.Rotate3x3_YXZ[float64]([3]float64{0, -time_, 0})
+  geom3_3.Matrix = matrix.Rotate3x3_YXZ[float64]([3]float64{0, 0, time_})
+  *geom3_4 = matrix.Rotate3x3_YXZ[float64]([3]float64{time_, 0, 0})
   *geom3_5 = geom3_3.Concat(types.NewGeoM(0, 50, 100))
   
-	g.ComponentCollector.Draw(screen, &camera)
+  g.System.Update(components.Context{Screen : screen, Camera : camera, Time : time.Duration(0)})
 }
 
 func (g *Programm) Layout(outsideWidth, outsideHeight int) (int, int) {
@@ -119,9 +120,13 @@ func main() {
 	ebiten.SetWindowTitle("Azgenol")
 	ebiten.SetWindowResizable(true)
 
-	prog := Programm{}
+	prog := Programm{
+    System : components.NewComponentSystem(
+      components.NewComponentProcessRender(),
+    ),
+  }
 
-  prog.Add(
+  prog.System.Add(
 		&cube5,
 		&cube0,
 		&cube1,
