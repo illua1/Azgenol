@@ -13,6 +13,8 @@ github.com/illua1/Game-UI v0.0.0-20220412181653-4efb199a3e49 h1:Srlkyts69rCZAtWi
 github.com/illua1/Game-UI v0.0.0-20220412181653-4efb199a3e49/go.mod h1:mnD0MFTjTyZVFY1c92Ww4k4qW2lg0iC4LLDbSE9Fkfo=
 github.com/illua1/go-helpful v0.0.0-20220618192249-1e0cd4e3bf95 h1:D8KuociAHlNss/PO/A+OXdOd6Bge7Vb2VGES4EmxfnE=
 github.com/illua1/go-helpful v0.0.0-20220618192249-1e0cd4e3bf95/go.mod h1:C1Of6MolyVgUf+dvihNnnbDfnAoYY6WZ49zfL8yE9/A=
+github.com/illua1/go-helpful v0.0.0-20220619085552-6051e947a7ed h1:5SsfEQC18xFOvQKUObP2rzOGkkHPrQxSCPCXfHXfJDw=
+github.com/illua1/go-helpful v0.0.0-20220619085552-6051e947a7ed/go.mod h1:C1Of6MolyVgUf+dvihNnnbDfnAoYY6WZ49zfL8yE9/A=
 github.com/jakecoffman/cp v1.1.0/go.mod h1:JjY/Fp6d8E1CHnu74gWNnU0+b9VzEdUVPoJxg2PsTQg=
 github.com/jezek/xgb v0.0.0-20210312150743-0e0f116e1240/go.mod h1:3P4UH/k22rXyHIJD2w4h2XMqPX4Of/eySEZq9L6wqc4=
 github.com/jezek/xgb v1.0.0 h1:s2rRzAV8KQRlpsYA7Uyxoidv1nodMF0m6dIG6FhhVLQ=

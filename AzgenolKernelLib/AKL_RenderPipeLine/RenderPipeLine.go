@@ -11,8 +11,8 @@ import (
 )
 
 type RenderPipeLine struct {
-  Objects []RenderObject
-  calls []RenderCall
+  Objects *node.LNode[RenderObject]
+  First *RenderCall
   Debug bool
 }
 
@@ -20,53 +20,61 @@ type RenderObjectDebug interface {
   Draw(*ebiten.Image, *types.Camera)
 }
 
-func NewRenderPipeLine(in ...RenderObject) RenderPipeLine {
-  return RenderPipeLine{
-    Objects : in,
-  }
+func NewRenderPipeLine(in ...RenderObject)(ret RenderPipeLine) {
+  ret.Add(in...)
+  return
 }
 
 func(rp *RenderPipeLine) Add(in ...RenderObject){
-  rp.Objects = append(rp.Objects, in...)
+  for i := range in {
+    node.Append(&rp.Objects, in[i])
+  }
 }
 
 func(rp *RenderPipeLine) Draw (screen *ebiten.Image, camera *types.Camera){
-  rp.calls = make([]RenderCall, 0)
-  
-  for i := range rp.Objects {
-    rp.Objects[i].RenderCustom(
-      RenderCallAppend(func(IDrawer draw.ImageDrawer, deph float64) {
-        rp.calls = append(rp.calls, NewRenderCall(IDrawer, deph))
-        if len(rp.calls) == 1 {
-          return
-        }
-        node.BNodeDescrent(
-          (*node.BNode[RenderCallContain])(&rp.calls[0]),
-          (*node.BNode[RenderCallContain])(&rp.calls[len(rp.calls)-1]),
-          func(a, b *node.BNode[RenderCallContain]) bool {
-            return a.Contain.deph < b.Contain.deph
-          },
-        )
-      }),
-      camera,
-    )
-  }
+  node.For(
+    &rp.Objects,
+    func(in RenderObject){
+      in.RenderCustom(
+        RenderCallAppend(func(IDrawer draw.ImageDrawer, deph float64) {
+          var call = NewRenderCall(IDrawer, deph)
+          if (rp.First != nil){
+            node.BNodeDescrent(
+              (*node.BNode[RenderCallContain])(rp.First),
+              (*node.BNode[RenderCallContain])(&call),
+              func(a, b *node.BNode[RenderCallContain]) bool {
+                return a.Contain.deph < b.Contain.deph
+              },
+            )
+          } else {
+            rp.First = &call
+          }
+        }),
+        camera,
+      )
+    },
+  )
   
   x,y := screen.Size()
   var geom = ebiten.GeoM{}
   geom.Scale(float64(sort.MaxF(x, y))/1000, float64(sort.MaxF(x, y))/1000)
   geom.Translate(float64(x/2), float64(y/2))
   
-  node.BNodeForTo((*node.BNode[RenderCallContain])(&rp.calls[0]), func(_ int, contain RenderCallContain){
-    contain.Draw(screen, geom)
-  })
+  if (rp.First != nil){
+    node.BNodeForTo((*node.BNode[RenderCallContain])(rp.First), func(_ int, contain RenderCallContain){
+      contain.Draw(screen, geom)
+    })
+  }
   
   if rp.Debug {
-    for i := range rp.Objects {
-      if obj, ok := rp.Objects[i].(RenderObjectDebug); ok {
-        obj.Draw(screen, camera)
-      }
-    }
+    node.For(
+      &rp.Objects,
+      func(in RenderObject){
+        if obj, ok := in.(RenderObjectDebug); ok {
+          obj.Draw(screen, camera)
+        }
+      },
+    )
   }
   
 }

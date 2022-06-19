@@ -29,7 +29,7 @@ func (g *Programm) Update() error {
 	camera.SetAngle(
 		float64(y)/100,
 		0.0,
-		float64(x)/100,
+		-float64(x)/100,
 	)
 
 	return nil
