@@ -16,6 +16,8 @@ IF DEFINED BUILD_MOD (
     echo Supported commands:
     echo - make = Just build
     echo - make init = first make
+    echo - make format = auto call formating all libs
+
     echo - make help = support info
     goto END
   )ELSE IF "%BUILD_MOD%"=="reliase" (
@@ -81,7 +83,7 @@ goto RUN
 
 
 :FORMAT
-echo Formation
+echo Formating
 cd AzgenolKernelLib
 @echo on
 go fmt ./...
