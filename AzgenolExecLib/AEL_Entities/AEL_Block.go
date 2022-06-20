@@ -3,6 +3,7 @@ package AEL_EBlock
 import (
   types "github.com/illua1/Azgenol/AzgenolKernelLib/AKL_Types"
 	render "github.com/illua1/Azgenol/AzgenolKernelLib/AKL_Render"
+  collise "github.com/illua1/Azgenol/AzgenolKernelLib/AKL_ColliseSolver"
   pipeline "github.com/illua1/Azgenol/AzgenolKernelLib/AKL_RenderPipeLine"
   kinematic "github.com/illua1/Azgenol/AzgenolKernelLib/AKL_KinematicSolver"
   
@@ -39,7 +40,7 @@ func NewBlock(x, y, z float64, xs, ys, zs float64, img *ebiten.Image, isMove boo
 }
 
 func(block *Block)GetRenderObject()pipeline.RenderObject{
-  var cube = componentExec.NewRenderComponentD(
+  var cube = componentExec.NewRenderComponent(
     &block.Box,
     &block.Location,
     &block.Matrix,
@@ -48,6 +49,15 @@ func(block *Block)GetRenderObject()pipeline.RenderObject{
 }
 
 func(block *Block)GetKinematicObject()kinematic.KinematicObject{
-  var move = componentExec.NewKinematicComponent()
+  var move = componentExec.NewKinematicComponent(
+    &block.Location,
+    &block.Velocity,
+    &block.PhysicMove,
+  )
   return &move
+}
+
+func(block *Block)GetColliseObject()collise.ColliseObject{
+  var collise = componentExec.NewColliseComponent()
+  return &collise
 }

@@ -29,8 +29,8 @@ func NewRenderPipeLine(in ...RenderObject)(ret RenderPipeLine) {
 
 func(rp *RenderPipeLine) Add(in RenderObject){
   var object = node.Append(&rp.Objects, in)
-  if instance, ok := in.(types.DeleteRenderObject); ok {
-    instance.SetRenderDelete(object.Del)
+  if instance, ok := in.(types.DeleteObject); ok {
+    instance.SetDelete(object.Del)
   }
 }
 

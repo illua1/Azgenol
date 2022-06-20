@@ -17,6 +17,7 @@ import (
 
 type Programm struct{
   System components.ComponentSystem
+  types.Context
 }
 
 var (
@@ -29,13 +30,14 @@ func (g *Programm) Update() error {
 	time_ += 0.03
 
 	camera.SetAngle(-math.Pi/4, 0, -math.Pi/4)
-	x, y := ebiten.CursorPosition()
-	camera.SetAngle(
-		float64(y)/100,
-		0.0,
-		-float64(x)/100,
-	)
-
+  if false {
+    x, y := ebiten.CursorPosition()
+    camera.SetAngle(
+      float64(y)/100,
+      0.0,
+      -float64(x)/100,
+    )
+  }
 	return nil
 }
 
@@ -46,12 +48,12 @@ func (g *Programm) Draw(screen *ebiten.Image) {
 	geom.Scale(float64(sort.MaxF(x, y))/1000, float64(sort.MaxF(x, y))/1000)
 	geom.Translate(float64(x/2), float64(y/2))
   
+  g.Context.Time = time.Now().Sub(g.StartTime)
+  g.Context.Screen = screen
+  g.Context.Camera = camera
+  
   g.System.Update(
-    types.Context{
-      Screen : screen,
-      Camera : camera,
-      Time : time.Duration(0),
-    },
+    g.Context,
   )
 }
 
@@ -68,7 +70,12 @@ func main() {
     System : components.NewComponentSystem(
       components.NewComponentProcessRender(),
       components.NewComponentProcessKinematic(),
+      components.NewComponentProcessCollise(),
     ),
+    Context : types.Context{
+      Camera : camera,
+      StartTime : time.Now(),
+    },
   }
   
   var Block1 = entities.NewBlock(

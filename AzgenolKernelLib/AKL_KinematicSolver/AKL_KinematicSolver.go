@@ -1,7 +1,7 @@
 package AKL_TypeKinematic
 
 import(
- // "time"
+  "time"
   
   types "github.com/illua1/Azgenol/AzgenolKernelLib/AKL_Types"
   
@@ -10,20 +10,34 @@ import(
 
 type KinematicSolver struct {
   list *node.LNode[KinematicObject]
+  time.Duration
 }
 
 func NewKinematicSolver() KinematicSolver {
   return KinematicSolver{}
 }
 
-func (kObject *KinematicSolver) Add (in KinematicObject){
-  node.Append(&kObject.list, in)
+func (kSolver *KinematicSolver) Add (in KinematicObject){
+  var object = node.Append(&kSolver.list, in)
+  if instance, ok := in.(types.DeleteObject); ok {
+    instance.SetDelete(object.Del)
+  }
 }
 
 type KinematicObject interface {
-  
+  Step(DeltaTime float64)
 }
 
-func (kObject *KinematicSolver) Update (context types.Context) {
+func (kSolver *KinematicSolver) Update (context types.Context) {
   
+  var DeltaTime = (context.Time - kSolver.Duration).Seconds()
+  
+  node.For(
+    &kSolver.list,
+    func(kObject KinematicObject){
+      kObject.Step(DeltaTime)
+    },
+  )
+  
+  kSolver.Duration = context.Time
 }

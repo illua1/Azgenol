@@ -4,7 +4,7 @@ set PROJECT_NAME=Azgenol
 set BUILD_DIR=bin
 
 set BUILD_MOD=%1
-
+set BUILD_ID_FLAG=-ldflags=""
 
 IF DEFINED BUILD_MOD (
   IF "%BUILD_MOD%"=="init" (
@@ -18,6 +18,9 @@ IF DEFINED BUILD_MOD (
     echo - make init = first make
     echo - make help = support info
     goto END
+  )ELSE IF "%BUILD_MOD%"=="reliase" (
+    echo Reliase build
+    set BUILD_ID_FLAG=-ldflags="-H=windowsgui"
   )
 )
 goto PREPARE_BUILD_DIR
@@ -62,7 +65,7 @@ IF exist %PROJECT_NAME%.exe (
   echo File was deleted
 )
 cd ..
-go build -ldflags="-H=windowsgui" -o="%BUILD_DIR%/%PROJECT_NAME%.exe" .
+go build %BUILD_ID_FLAG% -o="%BUILD_DIR%/%PROJECT_NAME%.exe" .
 goto CLEAR_WIN_DATA_RES
 
 

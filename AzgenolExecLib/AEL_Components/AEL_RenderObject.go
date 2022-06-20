@@ -12,11 +12,7 @@ type RenderComponent struct {
   *types.Matrix3
 }
 
-func NewRenderComponent(box *render.Box, geom *types.GeoM) RenderComponent {
-  return RenderComponent{box, &geom.Vector3, &geom.Matrix3}
-}
-
-func NewRenderComponentD(box *render.Box, v *types.Vector3, m *types.Matrix3) RenderComponent {
+func NewRenderComponent(box *render.Box, v *types.Vector3, m *types.Matrix3) RenderComponent {
   return RenderComponent{box, v, m}
 }
 

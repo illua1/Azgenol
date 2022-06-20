@@ -6,12 +6,13 @@ import (
   "github.com/hajimehoshi/ebiten/v2"
 )
 
-type DeleteRenderObject interface{
-  SetRenderDelete(func())
+type DeleteObject interface{
+  SetDelete(func())
 }
 
 type Context struct {
   Screen *ebiten.Image
   Camera Camera
   Time time.Duration
+  StartTime time.Time
 }
