@@ -21,6 +21,8 @@ IF DEFINED BUILD_MOD (
   )ELSE IF "%BUILD_MOD%"=="reliase" (
     echo Reliase build
     set BUILD_ID_FLAG=-ldflags="-H=windowsgui"
+  )ELSE IF "%BUILD_MOD%"=="format" (
+    goto FORMAT
   )
 )
 goto PREPARE_BUILD_DIR
@@ -74,6 +76,23 @@ goto CLEAR_WIN_DATA_RES
 del "rsrc_%PROJECT_NAME%_windows_amd64.syso"
 del "rsrc_%PROJECT_NAME%_windows_386.syso"
 goto RUN
+
+
+
+
+:FORMAT
+echo Formation
+cd AzgenolKernelLib
+@echo on
+go fmt ./...
+@echo off
+cd ..
+cd AzgenolExecLib
+@echo on
+go fmt ./...
+@echo off
+cd ..
+goto END
 
 
 
