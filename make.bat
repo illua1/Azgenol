@@ -12,20 +12,25 @@ IF DEFINED BUILD_MOD (
     go mod init %PROJECT_NAME%
     go install -v "github.com/tc-hib/go-winres@latest"
     go mod tidy
+    goto PREPARE_BUILD_DIR
   )ELSE IF "%BUILD_MOD%"=="help" (
     echo Supported commands:
     echo - make = Just build
-    echo - make init = first make
-    echo - make format = auto call formating all libs
+    echo - make init = First make
+    echo - make reliase = Make reliase build
+    echo - make format = Auto call formating all libs
 
     echo - make help = support info
     goto END
   )ELSE IF "%BUILD_MOD%"=="reliase" (
     echo Reliase build
     set BUILD_ID_FLAG=-ldflags="-H=windowsgui"
+    goto PREPARE_BUILD_DIR
   )ELSE IF "%BUILD_MOD%"=="format" (
     goto FORMAT
   )
+  echo Undefine command
+  goto END
 )
 goto PREPARE_BUILD_DIR
 
