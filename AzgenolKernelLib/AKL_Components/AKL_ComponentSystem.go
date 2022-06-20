@@ -1,6 +1,8 @@
 package AKL_TypeComponents
 
 import(
+  types "github.com/illua1/Azgenol/AzgenolKernelLib/AKL_Types"
+  
   node "github.com/illua1/go-helpful/Node"
 )
 
@@ -26,7 +28,7 @@ func(cSystem *ComponentSystem)Add(in ...interface{}){
   )
 }
 
-func(cSystem *ComponentSystem)Update(context Context){
+func(cSystem *ComponentSystem)Update(context types.Context){
   node.For(
     &cSystem.list,
     func(cProcess ComponentProcess){

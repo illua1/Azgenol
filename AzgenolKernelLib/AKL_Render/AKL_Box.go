@@ -32,7 +32,7 @@ var (
   }
 )
 
-func box_driwe_face_check(i int, matrix *types.Matrix3) bool {
+func Box_driwe_face_check(i int, matrix *types.Matrix3) bool {
   switch i {
     case 0 : {
       return matrix.A[2][2] < 0
@@ -56,13 +56,6 @@ func box_driwe_face_check(i int, matrix *types.Matrix3) bool {
   return false
 }
 
-type BoxFace struct {
-  draw.ImageDrawer
-  float64
-}
-
-type Box [6]BoxFace
-
 func NewBox(sx, sy, sz float64, img *ebiten.Image)Box{
   return Box{
     BoxFace{
@@ -82,32 +75,19 @@ func NewBox(sx, sy, sz float64, img *ebiten.Image)Box{
       sy,
     },
     BoxFace{
-      draw.NewImageDrawerR(sz, sy, 1, img).Rot(-1.0).Flip(true, false),
+      draw.NewImageDrawerR(sz, sy, 1, img).Rot(-1.0).Flip(true, true),
       sx,
     },
     BoxFace{
-      draw.NewImageDrawerR(sz, sy, 1, img).Rot(1.0).Flip(true, false),
+      draw.NewImageDrawerR(sz, sy, 1, img).Rot(1.0).Flip(true, true),
       sx,
     },
   }
 }
 
-func(box *Box)Render(camera *types.Camera, location types.Vector3) (ret [3]draw.ImageDrawer) {
-  var offset int = 0
-  for i := range *box {
-    if box_driwe_face_check(i, &camera.Matrix) {
-      var location = location
-      location.Sub(camera.Location.Vector)
-      var face_location = Box_Faces_Vectors[i]
-      face_location.Scale(-box[i].float64)
-      location.Add(face_location.Vector)
-      location.Vector = camera.MatrixInvert.MulVector(location.Vector)
-      var face_matrix = types.Matrix3{camera.MatrixInvert.Mull(Box_Faces_Matrixes[i].Matrix)}
-      ret[offset] = box[i].ImageDrawer.ToImageDrawer(
-        location.Project(face_matrix.Project()),
-      )
-      offset++
-    }
-  }
-  return
+type BoxFace struct {
+  draw.ImageDrawer
+  float64
 }
+
+type Box volume.BoxContainerFaces[BoxFace]

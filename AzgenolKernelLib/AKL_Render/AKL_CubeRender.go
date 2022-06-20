@@ -15,19 +15,35 @@ func NewCube(box Box, geom types.GeoM) Cube {
 }
 
 func(cube *Cube) RenderCustom(call pipeline.RenderCallAppend, camera *types.Camera) {
-  for i := range cube.Box {
-    var matrix_l = types.Matrix3{camera.MatrixInvert.Mull(cube.GeoM.Matrix)}
-    if box_driwe_face_check(i, &matrix_l) {
-      var location = cube.Vector3
+  CubeRender(
+    &cube.Box,
+    &cube.Vector3,
+    &cube.Matrix3,
+    call,
+    camera,
+  )
+}
+
+func CubeRender(
+  box *Box,
+  vector *types.Vector3,
+  matrix *types.Matrix3,
+  call pipeline.RenderCallAppend,
+  camera *types.Camera,
+) {
+  for i := range box {
+    var matrix_l = types.Matrix3{camera.MatrixInvert.Mull(matrix.Matrix)}
+    if Box_driwe_face_check(i, &matrix_l) {
+      var location = *vector
       location.Sub(camera.Location.Vector)
       var face_location = Box_Faces_Vectors[i]
-      face_location.Scale(cube.Box[i].float64)
-      face_location.Vector = cube.GeoM.MulVector(face_location.Vector)
+      face_location.Scale(box[i].float64)
+      face_location.Vector = matrix.MulVector(face_location.Vector)
       location.Add(face_location.Vector)
       location.Vector = camera.MatrixInvert.MulVector(location.Vector)
-      var face_matrix = types.Matrix3{camera.MatrixInvert.Mull(cube.GeoM.Matrix.Mull(Box_Faces_Matrixes[i].Matrix))}
+      var face_matrix = types.Matrix3{camera.MatrixInvert.Mull(matrix.Mull(Box_Faces_Matrixes[i].Matrix))}
       call(
-        cube.Box[i].ImageDrawer.ToImageDrawer(
+        box[i].ImageDrawer.ToImageDrawer(
           location.Project(face_matrix.Project()),
         ),
         location.A[2],
