@@ -26,5 +26,5 @@ func (cpRender *ComponentProcessRender) Add(in interface{}) {
 }
 
 func (cpRender *ComponentProcessRender) Update(context types.Context) {
-	cpRender.RenderPipeLine.Draw(context.Screen, &context.Camera)
+	cpRender.RenderPipeLine.Draw(context.Screen, context.Camera)
 }

@@ -12,7 +12,7 @@ type DeleteObject interface {
 
 type Context struct {
 	Screen    *ebiten.Image
-	Camera    Camera
+	Camera    *Camera
 	Time      time.Duration
 	StartTime time.Time
 }

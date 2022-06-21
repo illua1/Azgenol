@@ -1,26 +1,29 @@
 package AKL_TypeComponents
 
 import (
-	types "github.com/illua1/Azgenol/AzgenolKernelLib/AKL_Types"
-
 	node "github.com/illua1/go-helpful/Node"
 )
 
-type ComponentSystem struct {
-	list *node.LNode[ComponentProcess]
+type ComponentProcess[ComponentContext any] interface {
+	Add(interface{})
+	Update(ComponentContext)
 }
 
-func NewComponentSystem(in ...ComponentProcess) (ret ComponentSystem) {
+type ComponentSystem[ComponentContext any] struct {
+	list *node.LNode[ComponentProcess[ComponentContext]]
+}
+
+func NewComponentSystem[ComponentContext any](in ...ComponentProcess[ComponentContext]) (ret ComponentSystem[ComponentContext]) {
 	for i := range in {
 		node.Append(&ret.list, in[i])
 	}
 	return
 }
 
-func (cSystem *ComponentSystem) Add(in ...interface{}) {
+func (cSystem *ComponentSystem[ComponentContext]) Add(in ...interface{}) {
 	node.For(
 		&cSystem.list,
-		func(cProcess ComponentProcess) {
+		func(cProcess ComponentProcess[ComponentContext]) {
 			for e := range in {
 				cProcess.Add(in[e])
 			}
@@ -28,10 +31,10 @@ func (cSystem *ComponentSystem) Add(in ...interface{}) {
 	)
 }
 
-func (cSystem *ComponentSystem) Update(context types.Context) {
+func (cSystem *ComponentSystem[ComponentContext]) Update(context ComponentContext) {
 	node.For(
 		&cSystem.list,
-		func(cProcess ComponentProcess) {
+		func(cProcess ComponentProcess[ComponentContext]) {
 			cProcess.Update(context)
 		},
 	)

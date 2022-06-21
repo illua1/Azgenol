@@ -5,9 +5,8 @@ import (
   "math"
   "time"
   
-	entities "github.com/illua1/Azgenol/AzgenolExecLib/AEL_Entities"
-  
 	types "github.com/illua1/Azgenol/AzgenolKernelLib/AKL_Types"
+	entities "github.com/illua1/Azgenol/AzgenolExecLib/AEL_Entities"
 	components "github.com/illua1/Azgenol/AzgenolKernelLib/AKL_Components"
 
 	sort "github.com/illua1/go-helpful/Sort"
@@ -16,7 +15,7 @@ import (
 )
 
 type Programm struct{
-  System components.ComponentSystem
+  System components.ComponentSystem[types.Context]
   types.Context
 }
 
@@ -30,7 +29,7 @@ func (g *Programm) Update() error {
 	time_ += 0.03
 
 	camera.SetAngle(-math.Pi/4, 0, -math.Pi/4)
-  if false {
+  if true {
     x, y := ebiten.CursorPosition()
     camera.SetAngle(
       float64(y)/100,
@@ -50,11 +49,8 @@ func (g *Programm) Draw(screen *ebiten.Image) {
   
   g.Context.Time = time.Now().Sub(g.StartTime)
   g.Context.Screen = screen
-  g.Context.Camera = camera
   
-  g.System.Update(
-    g.Context,
-  )
+  g.System.Update(g.Context)
 }
 
 func (g *Programm) Layout(outsideWidth, outsideHeight int) (int, int) {
@@ -67,13 +63,13 @@ func main() {
 	ebiten.SetWindowResizable(true)
 
 	prog := Programm{
-    System : components.NewComponentSystem(
+    System : components.NewComponentSystem[types.Context](
       components.NewComponentProcessRender(),
       components.NewComponentProcessKinematic(),
       components.NewComponentProcessCollise(),
     ),
     Context : types.Context{
-      Camera : camera,
+      Camera : &camera,
       StartTime : time.Now(),
     },
   }
