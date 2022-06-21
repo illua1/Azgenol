@@ -6,28 +6,37 @@ set BUILD_DIR=bin
 set BUILD_MOD=%1
 set BUILD_ID_FLAG=-ldflags=""
 
+
+
 IF DEFINED BUILD_MOD (
-  IF "%BUILD_MOD%"=="init" (
+  IF "%BUILD_MOD%"=="help" (
+    echo Supported commands:
+    echo - make = Just build
+    echo - make init = First make
+    echo - make run = Try to run last build
+    echo - make reliase = Make reliase build
+    echo - make format = Auto call formating all libs
+    echo - make help = support info
+    goto END
+    
+  )ELSE IF "%BUILD_MOD%"=="init" (
     echo Init...
     go mod init %PROJECT_NAME%
     go install -v "github.com/tc-hib/go-winres@latest"
     go mod tidy
     goto PREPARE_BUILD_DIR
-  )ELSE IF "%BUILD_MOD%"=="help" (
-    echo Supported commands:
-    echo - make = Just build
-    echo - make init = First make
-    echo - make reliase = Make reliase build
-    echo - make format = Auto call formating all libs
-
-    echo - make help = support info
-    goto END
+    
   )ELSE IF "%BUILD_MOD%"=="reliase" (
     echo Reliase build
     set BUILD_ID_FLAG=-ldflags="-H=windowsgui"
     goto PREPARE_BUILD_DIR
+    
   )ELSE IF "%BUILD_MOD%"=="format" (
     goto FORMAT
+    
+  )ElSE IF "%BUILD_MOD%"=="run" (
+    echo Try run last build
+    goto TRY_RUN
   )
   echo Undefine command
   goto END
@@ -100,6 +109,19 @@ go fmt ./...
 @echo off
 cd ..
 goto END
+
+
+
+:TRY_RUN
+cd %BUILD_DIR%
+IF exist %PROJECT_NAME%.exe (
+  cd ..
+  goto RUN
+)ELSE (
+  echo no have %PROJECT_NAME%.exe
+  cd ..
+  goto END
+)
 
 
 
