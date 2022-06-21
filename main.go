@@ -77,7 +77,7 @@ func main() {
   var Block1 = entities.NewBlock(
     0,
     0,
-    0,
+    -100,
     100,
     100,
     100,
@@ -95,10 +95,25 @@ func main() {
     Block_wall_face,
     true,
   )
+  /*
+  var Instances = entities.NewEmiter[entities.Block](
+    1000,
+    entities.NewBlock(
+      0,
+      0,
+      0,
+      50,
+      50,
+      50,
+      Block_wall_face,
+      false,
+    ),
+  )*/
   
   prog.System.Add(
     &Block1,
     &Block2,
+    //&Instances,
   )
 
 	if err := ebiten.RunGame(&prog); err != nil {

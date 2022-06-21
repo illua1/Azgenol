@@ -20,8 +20,15 @@ type IsRenderObject interface {
 }
 
 func (cpRender *ComponentProcessRender) Add(in interface{}) {
+	if in == nil {
+		return
+	}
 	if instance, ok := in.(IsRenderObject); ok {
-		cpRender.RenderPipeLine.Add(instance.GetRenderObject())
+		if renderObjectInstance := instance.GetRenderObject(); renderObjectInstance == nil {
+			return
+		} else {
+			cpRender.RenderPipeLine.Add(renderObjectInstance)
+		}
 	}
 }
 

@@ -14,8 +14,11 @@ type ComponentSystem[ComponentContext any] struct {
 }
 
 func NewComponentSystem[ComponentContext any](in ...ComponentProcess[ComponentContext]) (ret ComponentSystem[ComponentContext]) {
-	for i := range in {
-		node.Append(&ret.list, in[i])
+	if len(in) > 0 {
+		ret.list = *node.NewLNode(in[0])
+		for i := range in {
+			node.Append(&ret.list, in[i])
+		}
 	}
 	return
 }

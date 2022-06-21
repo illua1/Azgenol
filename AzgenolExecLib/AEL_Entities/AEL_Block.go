@@ -40,24 +40,25 @@ func NewBlock(x, y, z float64, xs, ys, zs float64, img *ebiten.Image, isMove boo
 }
 
 func (block *Block) GetRenderObject() pipeline.RenderObject {
-	var cube = componentExec.NewRenderComponent(
+	return componentExec.NewRenderComponent(
 		&block.Box,
 		&block.Location,
 		&block.Matrix,
 	)
-	return &cube
+}
+
+func (block *Block) GetObjectToMove() (*types.Vector3, *types.Matrix3) {
+	return &block.Location, &block.Matrix
 }
 
 func (block *Block) GetKinematicObject() kinematic.KinematicObject {
-	var move = componentExec.NewKinematicComponent(
+	return componentExec.NewKinematicComponent(
 		&block.Location,
 		&block.Velocity,
 		&block.PhysicMove,
 	)
-	return &move
 }
 
 func (block *Block) GetColliseObject() collise.ColliseObject {
-	var collise = componentExec.NewColliseComponent()
-	return &collise
+	return componentExec.NewColliseComponent()
 }

@@ -44,16 +44,22 @@ type RenderObjectDebug interface {
 }
 
 func NewRenderPipeLine(in ...RenderObject) (ret RenderPipeLine) {
-	for i := range in {
-		ret.Add(in[i])
+	if len(in) > 0 {
+		ret.Objects = *node.NewLNode(in[0])
+		for i := range in {
+			ret.Add(in[i])
+		}
 	}
 	return
 }
 
 func (rp *RenderPipeLine) Add(in RenderObject) {
+	if node.Len(&rp.Objects) == 0 {
+		rp.Objects = *node.NewLNode(in)
+	}
 	var object = node.Append(&rp.Objects, in)
 	if instance, ok := in.(types.DeleteObject); ok {
-		instance.SetDelete(object.Del)
+		instance.SetDelete(func() { node.Del(object) })
 	}
 }
 

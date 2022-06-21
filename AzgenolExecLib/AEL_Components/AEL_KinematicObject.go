@@ -14,7 +14,7 @@ func NewKinematicComponent(Location *types.Vector3, Velocity *types.Vector3, Mov
 	return KinematicComponent{Location, Velocity, Move}
 }
 
-func (kinematicC *KinematicComponent) Step(DeltaTime float64) {
+func (kinematicC KinematicComponent) Step(DeltaTime float64) {
 	if *kinematicC.Move {
 		kinematicC.Velocity.Add(types.NewVector3(0, 0, -10*DeltaTime).Vector)
 		kinematicC.Location.Add(kinematicC.Velocity.Vector)

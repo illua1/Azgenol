@@ -20,6 +20,9 @@ type IsColliseObject interface {
 }
 
 func (cpCollise *ComponentProceseCollise) Add(in interface{}) {
+	if in == nil {
+		return
+	}
 	if instance, ok := in.(IsColliseObject); ok {
 		cpCollise.ColliseSolver.Add(instance.GetColliseObject())
 	}

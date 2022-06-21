@@ -18,9 +18,12 @@ func NewKinematicSolver() KinematicSolver {
 }
 
 func (kSolver *KinematicSolver) Add(in KinematicObject) {
+	if node.Len(&kSolver.list) == 0 {
+		kSolver.list = *node.NewLNode(in)
+	}
 	var object = node.Append(&kSolver.list, in)
 	if instance, ok := in.(types.DeleteObject); ok {
-		instance.SetDelete(object.Del)
+		instance.SetDelete(func() { node.Del(object) })
 	}
 }
 

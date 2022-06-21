@@ -20,6 +20,9 @@ type IsKinematicObject interface {
 }
 
 func (cpKinematic *ComponentProcessKinematic) Add(in interface{}) {
+	if in == nil {
+		return
+	}
 	if instance, ok := in.(IsKinematicObject); ok {
 		cpKinematic.KinematicSolver.Add(instance.GetKinematicObject())
 	}
