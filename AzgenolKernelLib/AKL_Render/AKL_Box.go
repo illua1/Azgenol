@@ -32,34 +32,18 @@ var (
 	}
 )
 
-func Box_driwe_face_check(i int, matrix *types.Matrix3) bool {
-	switch i {
-	case 0:
-		{
-			return matrix.A[2][2] < 0
-		}
-	case 1:
-		{
-			return matrix.A[2][2] >= 0
-		}
-	case 2:
-		{
-			return matrix.A[2][1] < 0
-		}
-	case 3:
-		{
-			return matrix.A[2][1] >= 0
-		}
-	case 4:
-		{
-			return matrix.A[2][0] < 0
-		}
-	case 5:
-		{
-			return matrix.A[2][0] >= 0
-		}
+func Box_driwe_face(matrix *types.Matrix3) [3]int {
+	var rangeList = [3]int{5, 3, 1}
+	if matrix.A[2][2] < 0 {
+		rangeList[2] = 0
 	}
-	return false
+	if matrix.A[2][1] < 0 {
+		rangeList[1] = 2
+	}
+	if matrix.A[2][0] < 0 {
+		rangeList[0] = 4
+	}
+	return rangeList
 }
 
 func NewBox(sx, sy, sz float64, img *ebiten.Image) Box {

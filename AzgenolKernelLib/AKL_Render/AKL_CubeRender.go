@@ -31,23 +31,30 @@ func CubeRender(
 	call pipeline.RenderCallAppend,
 	camera *types.Camera,
 ) {
-	for i := range box {
-		var matrix_l = types.Matrix3{camera.MatrixInvert.Mull(matrix.Matrix)}
-		if Box_driwe_face_check(i, &matrix_l) {
-			var location = *vector
-			location.Sub(camera.Location.Vector)
-			var face_location = Box_Faces_Vectors[i]
-			face_location.Scale(box[i].float64)
-			face_location.Vector = matrix.MulVector(face_location.Vector)
-			location.Add(face_location.Vector)
-			location.Vector = camera.MatrixInvert.MulVector(location.Vector)
-			var face_matrix = types.Matrix3{camera.MatrixInvert.Mull(matrix.Mull(Box_Faces_Matrixes[i].Matrix))}
-			call(
-				box[i].ImageDrawer.ToImageDrawer(
-					location.Project(face_matrix.Project()),
-				),
-				location.A[2],
-			)
-		}
+	var cube_matrix = types.Matrix3{camera.MatrixInvert.Mull(matrix.Matrix)}
+	var face_location types.Vector3
+	for _, i := range Box_driwe_face(&cube_matrix) {
+
+		face_location = Box_Faces_Vectors[i]
+		face_location.Scale(box[i].float64)
+		face_location.Vector = matrix.MulVector(face_location.Vector)
+		face_location.Add(vector.Vector)
+		face_location.Sub(camera.Location.Vector)
+
+		face_location.Vector = camera.MatrixInvert.MulVector(
+			face_location.Vector,
+		)
+		cube_matrix.Matrix = camera.MatrixInvert.Mull(
+			matrix.Mull(
+				Box_Faces_Matrixes[i].Matrix,
+			),
+		)
+
+		call(
+			box[i].ImageDrawer.ToImageDrawer(
+				face_location.Project(cube_matrix.Project()),
+			),
+			face_location.A[2],
+		)
 	}
 }
