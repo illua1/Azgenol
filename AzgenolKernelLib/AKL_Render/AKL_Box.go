@@ -32,7 +32,7 @@ var (
 	}
 )
 
-func Box_driwe_face(matrix *types.Matrix3) [3]int {
+func Box_driwe_faces(matrix *types.Matrix3) [3]int {
 	var rangeList = [3]int{5, 3, 1}
 	if matrix.A[2][2] < 0 {
 		rangeList[2] = 0

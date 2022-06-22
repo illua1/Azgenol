@@ -18,10 +18,13 @@ func NewColliseSolver() ColliseSolver {
 }
 
 func (cSolver *ColliseSolver) Add(in ColliseObject) {
+	var object **node.LNode[ColliseObject]
 	if node.Len(&cSolver.list) == 0 {
-		cSolver.list = *node.NewLNode(in)
+		object = node.NewLNode(in)
+		cSolver.list = *object
+	} else {
+		object = node.Append(&cSolver.list, in)
 	}
-	var object = node.Append(&cSolver.list, in)
 	if instance, ok := in.(types.DeleteObject); ok {
 		instance.SetDelete(func() { node.Del(object) })
 	}

@@ -31,9 +31,9 @@ func CubeRender(
 	call pipeline.RenderCallAppend,
 	camera *types.Camera,
 ) {
-	var cube_matrix = types.Matrix3{camera.MatrixInvert.Mull(matrix.Matrix)}
+	var face_matrix = types.Matrix3{camera.MatrixInvert.Mull(matrix.Matrix)}
 	var face_location types.Vector3
-	for _, i := range Box_driwe_face(&cube_matrix) {
+	for _, i := range Box_driwe_faces(&face_matrix) {
 
 		face_location = Box_Faces_Vectors[i]
 		face_location.Scale(box[i].float64)
@@ -44,7 +44,7 @@ func CubeRender(
 		face_location.Vector = camera.MatrixInvert.MulVector(
 			face_location.Vector,
 		)
-		cube_matrix.Matrix = camera.MatrixInvert.Mull(
+		face_matrix.Matrix = camera.MatrixInvert.Mull(
 			matrix.Mull(
 				Box_Faces_Matrixes[i].Matrix,
 			),
@@ -52,7 +52,7 @@ func CubeRender(
 
 		call(
 			box[i].ImageDrawer.ToImageDrawer(
-				face_location.Project(cube_matrix.Project()),
+				face_location.Project(face_matrix.Project()),
 			),
 			face_location.A[2],
 		)

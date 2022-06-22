@@ -54,10 +54,13 @@ func NewRenderPipeLine(in ...RenderObject) (ret RenderPipeLine) {
 }
 
 func (rp *RenderPipeLine) Add(in RenderObject) {
+	var object **node.LNode[RenderObject]
 	if node.Len(&rp.Objects) == 0 {
-		rp.Objects = *node.NewLNode(in)
+		object = node.NewLNode(in)
+		rp.Objects = *object
+	} else {
+		object = node.Append(&rp.Objects, in)
 	}
-	var object = node.Append(&rp.Objects, in)
 	if instance, ok := in.(types.DeleteObject); ok {
 		instance.SetDelete(func() { node.Del(object) })
 	}

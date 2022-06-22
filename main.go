@@ -108,8 +108,8 @@ func main() {
       Block_wall_face,
       false,
     ),
-  )*/
-  
+  )
+  */
   prog.System.Add(
     &Block1,
     &Block2,
